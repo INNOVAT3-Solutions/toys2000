@@ -1,4 +1,4 @@
-import { data } from '../js/data.js';
+import { data, primaryCatalogForBrand } from '../js/data.js';
 import { cart } from '../js/cart.js';
 import { router } from '../js/router.js';
 import { store } from '../js/state.js';
@@ -6,7 +6,7 @@ import { store } from '../js/state.js';
 export function brandView(brandId) {
   const brand = data.brands.find(b => b.id === brandId);
   const products = data.products[brandId] || [];
-  const catalog = data.catalogs.find(c => c.id === brandId);
+  const catalog = primaryCatalogForBrand(brandId);
 
   if (!brand) {
     router.navigate('/');

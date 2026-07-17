@@ -1,7 +1,7 @@
 import { store } from '../js/state.js';
 import { cart } from '../js/cart.js';
 import { router } from '../js/router.js';
-import { data } from '../js/data.js';
+import { data, resolveCatalog } from '../js/data.js';
 
 export function createNavbar() {
   const nav = document.createElement('nav');
@@ -83,13 +83,6 @@ export function createNavbar() {
         Contact
       </a>
       <div class="mobile-menu-divider"></div>
-      <span class="mobile-menu-label">Categories</span>
-      ${data.categories.map(cat => `
-        <a href="#" class="mobile-menu-link mobile-menu-link-sub" data-category="${cat.id}">
-          ${cat.name}
-        </a>
-      `).join('')}
-      <div class="mobile-menu-divider"></div>
       <a href="#" class="mobile-menu-link mobile-menu-link-cta" data-action="products">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
         Order Now
@@ -109,7 +102,7 @@ export function createNavbar() {
     }
     if (action === 'catalogs') {
       if (brandId) {
-        const catalog = data.catalogs.find(c => c.id === brandId);
+        const catalog = resolveCatalog(brandId);
         if (catalog && (catalog.catalogUrl || catalog.pdfUrl)) {
           store.publish('openCatalog', catalog);
           return;

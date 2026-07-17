@@ -24,7 +24,7 @@ export function createCatalogViewer() {
           ${logoHtml}
           <div class="catalog-modal-info">
             <h2>${catalog.name}</h2>
-            <span class="catalog-modal-year">${catalog.year} Catalog</span>
+            <span class="catalog-modal-year">${catalog.year} ${catalog.title && catalog.title !== 'Full Line' ? catalog.title : ''} Catalog</span>
           </div>
         </div>
         <div class="catalog-modal-actions">

@@ -17,8 +17,8 @@
   );
 }
 
-.main-content-gradient .catalog-gallery,
-.main-content-gradient .featured-categories,
+.main-content-gradient .catalog-library,
+.main-content-gradient .highlights-section,
 .main-content-gradient .promo-banner-section,
 .main-content-gradient .promos-section,
 .main-content-gradient .brands-section,
@@ -75,23 +75,28 @@
 
 .hero-slide-bg {
   position: absolute;
-  inset: -6%;
-  width: 112%;
-  height: 112%;
+  /* Only enough overhang to cover the Ken Burns pan (max 0.8%) — any more
+     magnifies the source photo and softens it for no visual gain. */
+  inset: -1.5%;
+  width: 103%;
+  height: 103%;
   background-size: cover;
   background-position: center;
   animation: heroKenBurns 18s ease-in-out infinite alternate;
+  /* Art-directed per orientation: `cover` in a 100vh hero crops toward the
+     viewport's ratio, so a 21:9 frame loses ~80% of its width on a phone.
+     Slides without a portrait variant fall back to the wide one. */
+  background-image: var(--bg-wide);
+}
+
+@media (orientation: portrait) {
+  .hero-slide-bg {
+    background-image: var(--bg-tall, var(--bg-wide));
+  }
 }
 
 .hero-slide:nth-child(even) .hero-slide-bg {
   animation-name: heroKenBurns2;
-}
-
-/* SportsStuff hero photos are tightly framed — fit the whole image instead of cropping */
-.hero-slide-bg[style*="Sportsstuff"] {
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-color: #0a1828;
 }
 
 @keyframes heroKenBurns {
@@ -1244,10 +1249,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-width: 200px;
-  height: 140px;
-  opacity: 0.6;
+  gap: 14px;
+  min-width: 280px;
+  height: 200px;
+  opacity: 0.72;
   cursor: pointer;
   transition: all 0.35s ease;
 }
@@ -1258,8 +1263,8 @@
 }
 
 .mfr-ticker-logo {
-  max-height: 112px;
-  max-width: 320px;
+  max-height: 160px;
+  max-width: 400px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -1556,198 +1561,194 @@
   .mfr-ticker-name { font-size: 0.72rem; }
 }
 
-/* ── INTERACTIVE BENTO CATEGORY GALLERY ── */
-.interactive-gallery-section {
-  padding: 80px 0;
-  overflow: hidden;
+/* ── PRODUCT HIGHLIGHTS — real pages lifted from the manufacturers' catalogs ── */
+.highlights-section {
+  padding-bottom: 56px;
 }
 
-.category-gallery-viewport {
-  width: 100%;
-  margin-top: 40px;
-  cursor: grab;
-  padding-bottom: 20px;
-}
-.category-gallery-viewport:active {
-  cursor: grabbing;
-}
-
-.category-gallery-grid {
-  display: grid;
-  grid-auto-columns: 260px;
-  grid-template-rows: repeat(2, 220px);
-  grid-auto-flow: column dense;
-  gap: 16px;
-  padding: 0 5vw;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-.category-gallery-grid::-webkit-scrollbar { display: none; }
-
-.category-gallery-item {
+.hl-rail-wrap {
   position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  border: 1px solid var(--glass-border);
-  background: var(--bg-surface);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  margin-top: 34px;
+}
+
+.hl-rail {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 6px 4px 10px;
+  /* fade the rail edges so cut-off cards read as "more this way" */
+  mask-image: linear-gradient(to right, transparent 0, black 26px, black calc(100% - 26px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 26px, black calc(100% - 26px), transparent 100%);
+  scrollbar-width: none;
+}
+
+.hl-rail::-webkit-scrollbar { display: none; }
+
+.hl-card {
+  flex: 0 0 clamp(220px, 22vw, 268px);
+  scroll-snap-align: start;
   cursor: pointer;
-  scroll-snap-align: center;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  background: none;
+  padding: 0;
+  text-align: left;
+  animation: hlIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms);
 }
 
-.category-gallery-item:hover, .category-gallery-item:focus {
-  transform: scale(1.02);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-  border-color: rgba(255,255,255,0.2);
-  outline: none;
-  z-index: 10;
+@keyframes hlIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
 }
 
-/* Bento Spans */
-.category-gallery-item.span-large {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-.category-gallery-item.span-tall {
-  grid-row: span 2;
-}
-.category-gallery-item.span-small {
-  grid-row: span 1;
+/* The catalog page itself — presented like a sheet of paper */
+.hl-page {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(15, 32, 58, 0.08);
+  box-shadow:
+    0 1px 2px rgba(15, 32, 58, 0.05),
+    0 12px 30px -14px rgba(15, 32, 58, 0.38);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cg-img {
-  position: absolute;
-  inset: 0;
+.hl-card:hover .hl-page,
+.hl-card:focus-visible .hl-page {
+  transform: translateY(-6px);
+  box-shadow:
+    0 2px 5px rgba(15, 32, 58, 0.07),
+    0 30px 60px -20px rgba(15, 32, 58, 0.5);
+}
+
+.hl-card:focus-visible { outline: none; }
+.hl-card:focus-visible .hl-page {
+  outline: 2px solid var(--secondary-color, #00aeef);
+  outline-offset: 3px;
+}
+
+/* Anchored top: catalog pages lead with their headline and hero product */
+.hl-page img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-.category-gallery-item:hover .cg-img, .category-gallery-item:focus .cg-img {
-  transform: scale(1.05);
+  object-position: top center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cg-gradient {
+.hl-card:hover .hl-page img { transform: scale(1.04); }
+
+.hl-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-.category-gallery-item:hover .cg-gradient, .category-gallery-item:focus .cg-gradient {
-  opacity: 1;
-}
-
-.cg-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 24px;
-  transform: translateY(20px);
-  opacity: 0;
-  transition: all 0.5s ease;
-  z-index: 2;
-}
-.category-gallery-item:hover .cg-content, .category-gallery-item:focus .cg-content {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.cg-title {
-  color: white;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0 0 6px 0;
-}
-.cg-desc {
-  color: rgba(255,255,255,0.85);
-  font-size: 0.9rem;
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* Modal Implementation */
-.category-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 9999;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  padding-bottom: 18px;
+  background: linear-gradient(to top, rgba(15, 32, 58, 0.62) 0%, rgba(15, 32, 58, 0.1) 45%, transparent 70%);
   opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-.category-modal-overlay.active {
-  opacity: 1;
-  visibility: visible;
+  transition: opacity 0.3s ease;
 }
 
-.category-modal-content {
-  position: relative;
-  width: 90%;
-  max-width: 900px;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-  opacity: 0;
-}
-.category-modal-overlay.active .category-modal-content {
-  transform: scale(1) translateY(0);
-  opacity: 1;
+.hl-card:hover .hl-veil,
+.hl-card:focus-visible .hl-veil { opacity: 1; }
+
+.hl-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  background: var(--primary-color, #f15a24);
+  color: #fff;
+  font-family: var(--font-brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px -6px rgba(241, 90, 36, 0.7);
+  transform: translateY(8px) scale(0.96);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.category-modal-img {
-  width: 100%;
-  max-height: 85vh;
-  object-fit: contain;
-  border-radius: 12px;
+.hl-card:hover .hl-open,
+.hl-card:focus-visible .hl-open { transform: none; }
+
+.hl-info { padding: 13px 2px 0; }
+
+.hl-brand {
+  display: block;
+  font-family: var(--font-brand);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--secondary-color, #00aeef);
+  margin-bottom: 4px;
 }
 
-.category-modal-close {
+.hl-label {
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Rail arrows */
+.hl-nav {
   position: absolute;
-  top: -16px;
-  right: -16px;
-  background: rgba(0,0,0,0.8);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.2);
+  top: 34%;
+  z-index: 4;
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  border: 1px solid rgba(15, 32, 58, 0.1);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
-  z-index: 10;
-}
-.category-modal-close:hover {
-  background: var(--primary-color);
-  border-color: var(--primary-color);
-  transform: scale(1.1);
+  box-shadow: 0 6px 20px -4px rgba(15, 32, 58, 0.3);
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (max-width: 768px) {
-  .category-gallery-grid {
-    grid-auto-columns: 240px;
-    grid-template-rows: repeat(2, 180px);
+.hl-nav--prev { left: -14px; }
+.hl-nav--next { right: -14px; }
+
+.hl-nav:hover:not(:disabled) {
+  transform: scale(1.08);
+  border-color: rgba(0, 174, 239, 0.5);
+  color: var(--secondary-color, #00aeef);
+}
+
+.hl-nav:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .hl-nav { display: none; }
+  .hl-rail {
+    gap: 16px;
+    mask-image: none;
+    -webkit-mask-image: none;
+    padding-inline: 2px;
   }
-  .category-gallery-item.span-large {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-  .category-gallery-item.span-tall {
-    grid-row: span 1;
-  }
-  .category-modal-close {
-    top: 16px;
-    right: 16px;
-  }
+  .hl-card { flex-basis: 200px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hl-card { animation: none; }
+  .hl-card:hover .hl-page,
+  .hl-card:hover .hl-page img { transform: none; }
+  .hl-rail { scroll-behavior: auto; }
 }

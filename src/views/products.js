@@ -206,7 +206,11 @@ export function productsView(initialFilters = {}) {
                           p.brandName.toLowerCase().includes(searchTerm);
       const matchesCategory = activeFilters.categories.length === 0 || activeFilters.categories.includes(p.category);
       const matchesBrand = activeFilters.brands.length === 0 || activeFilters.brands.includes(p.brandId);
-      const matchesCatalog = activeFilters.catalogs.length === 0 || activeFilters.catalogs.includes(p.brandId);
+      // Catalog ids are unique per catalog, so map the selected ones back to their
+      // brands before matching products (a brand may publish several catalogs).
+      const selectedCatalogBrands = activeFilters.catalogs
+        .map(cid => data.catalogs.find(c => c.id === cid)?.brandId || cid);
+      const matchesCatalog = activeFilters.catalogs.length === 0 || selectedCatalogBrands.includes(p.brandId);
       const matchesPrice = !activeFilters.priceRange || (p.price >= activeFilters.priceRange.min && p.price <= activeFilters.priceRange.max);
 
       const matchesPromo = activeFilters.promotions.length === 0 ||

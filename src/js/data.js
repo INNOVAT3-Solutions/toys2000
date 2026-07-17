@@ -79,10 +79,10 @@ export const data = {
   heroSlides: [
     {
       id: 'slide-airhead-1',
-      tag: 'Big-Air Towables',
-      accentWord: 'Scream',
-      headline: 'Built for the Loudest Scream of Summer',
-      subheadline: "Airhead Switch Back and the rest of the multi-rider lineup — engineered for the moment two friends can't stop laughing at thirty knots.",
+      tag: 'Airhead · Towable Tubes',
+      accentWord: 'Switch Back',
+      headline: 'The Airhead Switch Back',
+      subheadline: 'A two-rider towable tube with padded grips and a wing-shaped hull — one of the fastest-moving Airhead towables Toys 2000 stocks for marina and lake accounts.',
       ctaPrimary: { text: 'Shop Airhead', link: '/products', brand: 'airhead' },
       ctaSecondary: { text: 'View Airhead Catalog', link: '#catalogs', catalog: 'airhead' },
       image: '/hero/Airhead-1.webp',
@@ -92,10 +92,10 @@ export const data = {
     },
     {
       id: 'slide-airhead-2',
-      tag: 'Wakesurf & Wakeboard',
-      accentWord: 'Carve',
-      headline: 'Carve a Cleaner Wake',
-      subheadline: 'Airhead boards and rope packages built for the rider chasing the perfect set — the kind that only shows up at golden hour.',
+      tag: 'Airhead · Wakesurf & Wakeboard',
+      accentWord: 'Wakesurf',
+      headline: 'Airhead Wakesurf Boards',
+      subheadline: 'Wakesurf and wakeboard decks, tow ropes, and life vests — the complete Airhead behind-the-boat lineup for watersports retailers.',
       ctaPrimary: { text: 'Shop Airhead', link: '/products', brand: 'airhead' },
       ctaSecondary: { text: 'View Airhead Catalog', link: '#catalogs', catalog: 'airhead' },
       image: '/hero/Airhead_2.webp',
@@ -105,10 +105,10 @@ export const data = {
     },
     {
       id: 'slide-aqua-leisure-1',
-      tag: 'Resort Pool Floats',
-      accentWord: 'Recline',
-      headline: 'The Recline Your Guests Came For',
-      subheadline: 'Tropical-print loungers and luxury pool floats from Aqua Leisure — the must-have on every resort deck from Florida to St. Lucia.',
+      tag: 'Aqua Leisure · Pool Floats',
+      accentWord: 'Zero Gravity',
+      headline: 'The Aqua Leisure Zero Gravity Lounge',
+      subheadline: 'A mesh-seat chair float in tropical palm print, with a padded headrest and arm supports — the Aqua Leisure resort-deck bestseller from Florida to St. Lucia.',
       ctaPrimary: { text: 'Shop Aqua Leisure', link: '/products', brand: 'aqua-leisure' },
       ctaSecondary: { text: 'View Aqua Leisure Catalog', link: '#catalogs', catalog: 'aqua-leisure' },
       image: '/hero/Aqua_Leisure-1.jpg',
@@ -118,10 +118,10 @@ export const data = {
     },
     {
       id: 'slide-aqua-leisure-2',
-      tag: 'Pool & Party',
-      accentWord: 'Drift',
-      headline: 'Drift Together. Splash Together.',
-      subheadline: 'Aqua Leisure inner tubes and party floats — the pool moment guests text home about before they even dry off.',
+      tag: 'Aqua Leisure · Inner Tubes',
+      accentWord: 'Ring Tubes',
+      headline: 'Aqua Leisure Ring Tubes',
+      subheadline: 'Oversized inner tubes with built-in cup holders and mesh seats — the Aqua Leisure pool staple that ships by the pallet to resorts and big-box accounts.',
       ctaPrimary: { text: 'Shop Aqua Leisure', link: '/products', brand: 'aqua-leisure' },
       ctaSecondary: { text: 'View Aqua Leisure Catalog', link: '#catalogs', catalog: 'aqua-leisure' },
       image: '/hero/Aqua_Leisure_2.jpg',
@@ -131,10 +131,10 @@ export const data = {
     },
     {
       id: 'slide-lionel-1',
-      tag: 'A Lionel Legacy',
-      accentWord: 'Heritage',
-      headline: '125 Years of American Heritage',
-      subheadline: "From 1938 to today — Lionel sets are the trains your grandfather pulled out of the box, still pulling laps around the holiday tree.",
+      tag: 'Lionel · Heritage Train Sets',
+      accentWord: 'Lionel',
+      headline: '125 Years of Lionel',
+      subheadline: 'Ready-to-run electric train sets from the name on every catalog cover since 1900 — Lionel, stocked by Toys 2000 for toy and hobby retailers.',
       ctaPrimary: { text: 'Shop Lionel', link: '/products', brand: 'lionel' },
       ctaSecondary: { text: 'Visit Lionel', link: '/brand', brand: 'lionel' },
       image: '/hero/Lionel_1.jpg',
@@ -144,10 +144,10 @@ export const data = {
     },
     {
       id: 'slide-lionel-2',
-      tag: 'Lionel Premium',
-      accentWord: 'Detail',
-      headline: 'Detail That Stops the Conversation',
-      subheadline: 'Show-floor Lionel locomotives engineered for the serious collector and the gift-shop showpiece — every rivet exactly where it should be.',
+      tag: 'Lionel · Premium Locomotives',
+      accentWord: 'Locomotives',
+      headline: 'Lionel Scale Locomotives',
+      subheadline: 'O-gauge steam and diesel engines with hand-applied detail and die-cast bodies — the Lionel showpiece for serious collectors and gift-shop displays.',
       ctaPrimary: { text: 'Shop Lionel', link: '/products', brand: 'lionel' },
       ctaSecondary: { text: 'Visit Lionel', link: '/brand', brand: 'lionel' },
       image: '/hero/Lionel-2.jpg',
@@ -157,10 +157,10 @@ export const data = {
     },
     {
       id: 'slide-masterpieces-1',
-      tag: 'National Parks Puzzles',
-      accentWord: 'America',
-      headline: 'All of America in 1,000 Pieces',
-      subheadline: "MasterPieces National Parks collection — the bestselling puzzle line for gift shops, lodges, ranger stations, and anywhere people pick up a souvenir.",
+      tag: 'MasterPieces · Puzzles',
+      accentWord: '63 National Parks',
+      headline: 'The 63 National Parks Puzzle',
+      subheadline: 'A 1,000-piece MasterPieces jigsaw with vintage-poster art for all 63 U.S. national parks — the souvenir bestseller for lodges, ranger stations, and gift shops.',
       ctaPrimary: { text: 'Shop MasterPieces', link: '/products', brand: 'masterpieces' },
       ctaSecondary: { text: 'Visit MasterPieces', link: '/brand', brand: 'masterpieces' },
       image: '/hero/Masterpiece_1.jpg',
@@ -170,10 +170,10 @@ export const data = {
     },
     {
       id: 'slide-silver-circle-1',
-      tag: 'Nature Discovery',
-      accentWord: 'Wild',
-      headline: 'Bottle Up the Wild',
-      subheadline: 'Silver Circle build-your-own terrariums and nature kits — the hands-on bestseller at every zoo, aquarium, and garden gift shop.',
+      tag: 'Silver Circle · Nature Kits',
+      accentWord: 'Terrarium',
+      headline: 'Silver Circle Terrarium Kits',
+      subheadline: 'Build-your-own moss terrarium jars with cork lids and stone accents — the hands-on Silver Circle kit that anchors zoo, aquarium, and garden gift shops.',
       ctaPrimary: { text: 'Shop Silver Circle', link: '/products', brand: 'silver-circle' },
       ctaSecondary: { text: 'View Silver Circle Catalog', link: '#catalogs', catalog: 'silver-circle' },
       image: '/hero/Silver_Circle-1.webp',
@@ -183,49 +183,52 @@ export const data = {
     },
     {
       id: 'slide-sportsstuff-1',
-      tag: 'Pool Lounge',
-      accentWord: 'Chill',
-      headline: 'The Chill Your Deck Has Been Missing',
-      subheadline: 'SportsStuff racing-stripe lounge floats with built-in cup holders — the pool upgrade guests notice the second they sit down.',
+      tag: 'SportsStuff · Pool Lounges',
+      accentWord: 'Pool Lounges',
+      headline: 'SportsStuff Pool Lounges',
+      subheadline: 'Racing-graphic chair floats with built-in cup holders and padded backrests — SportsStuff pool seating for resort decks and backyard accounts.',
       ctaPrimary: { text: 'Shop SportsStuff', link: '/products', brand: 'sportsstuff' },
       ctaSecondary: { text: 'View SportsStuff Catalog', link: '#catalogs', catalog: 'sportsstuff' },
-      image: '/hero/Sportsstuff_1.webp',
-      thumb: '/hero/Sportsstuff_1.webp',
+      image: '/hero/Sportsstuff_1_wide.webp',
+      imagePortrait: '/hero/Sportsstuff_1_tall.webp',
+      thumb: '/hero/Sportsstuff_1_wide.webp',
       textEffect: 'energize',
       accentClass: 'accent-blue'
     },
     {
       id: 'slide-sportsstuff-2',
-      tag: 'Winter Tubing',
-      accentWord: 'Slope',
-      headline: 'Same Tube. Different Slope.',
-      subheadline: "SportsStuff snow tubes built for the sledding hill — the off-season pickup that keeps winter sport shops moving inventory year-round.",
+      tag: 'SportsStuff · Snow Tubes',
+      accentWord: 'Snow Tubes',
+      headline: 'SportsStuff Snow Tubes',
+      subheadline: 'Heavy-gauge inflatable snow tubes built for the sledding hill — the SportsStuff off-season line that keeps winter sport shops selling year-round.',
       ctaPrimary: { text: 'Shop SportsStuff', link: '/products', brand: 'sportsstuff' },
       ctaSecondary: { text: 'View SportsStuff Catalog', link: '#catalogs', catalog: 'sportsstuff' },
-      image: '/hero/Sportsstuff_2.webp',
-      thumb: '/hero/Sportsstuff_2.webp',
+      image: '/hero/Sportsstuff_2_wide.webp',
+      imagePortrait: '/hero/Sportsstuff_2_tall.webp',
+      thumb: '/hero/Sportsstuff_2_wide.webp',
       textEffect: 'reveal',
       accentClass: 'accent-blue'
     },
     {
       id: 'slide-sportsstuff-3',
-      tag: 'Party Islands',
-      accentWord: 'Crew',
-      headline: 'Bring the Whole Crew Aboard',
-      subheadline: 'The SportsStuff Fiesta Private Island — 8 spots, 11.5 feet, the centerpiece float every lake fleet gets asked about by name.',
+      tag: 'SportsStuff · Party Islands',
+      accentWord: 'Fiesta Island',
+      headline: 'The SportsStuff Fiesta Island',
+      subheadline: 'The Fiesta Private Island — 11.5 feet across with eight contoured seats and cup holders, the SportsStuff centerpiece float lake retailers get asked for by name.',
       ctaPrimary: { text: 'Shop SportsStuff', link: '/products', brand: 'sportsstuff' },
       ctaSecondary: { text: 'View SportsStuff Catalog', link: '#catalogs', catalog: 'sportsstuff' },
-      image: '/hero/Sportsstuff_3.webp',
-      thumb: '/hero/Sportsstuff_3.webp',
+      image: '/hero/Sportsstuff_3_wide.webp',
+      imagePortrait: '/hero/Sportsstuff_3_tall.webp',
+      thumb: '/hero/Sportsstuff_3_wide.webp',
       textEffect: 'energize',
       accentClass: 'accent-orange'
     },
     {
       id: 'slide-us-divers-1',
-      tag: 'Snorkel Essentials',
-      accentWord: 'Pause',
-      headline: 'Just Before the Pause Becomes a Plunge',
-      subheadline: 'US Divers fins, masks, and travel-ready snorkel sets — outfitting beach destinations from Puerto Rico to St. Lucia.',
+      tag: 'U.S. Divers · Snorkel Sets',
+      accentWord: 'Mask & Fins',
+      headline: 'U.S. Divers Mask & Fins',
+      subheadline: 'Snorkel masks, dry-top snorkels, and travel fins — the U.S. Divers sets that outfit beach kiosks from Puerto Rico to St. Lucia.',
       ctaPrimary: { text: 'Shop US Divers', link: '/products', brand: 'us-divers' },
       ctaSecondary: { text: 'Visit US Divers', link: '/brand', brand: 'us-divers' },
       image: '/hero/US_Divers-1.webp',
@@ -235,10 +238,10 @@ export const data = {
     },
     {
       id: 'slide-us-divers-2',
-      tag: 'Pro Dive Gear',
-      accentWord: 'Leap',
-      headline: 'Geared Up for the Leap',
-      subheadline: 'Pro-grade US Divers wetsuits, BCDs, and regulators — for the dive shop that serves certified explorers, not just snorkelers.',
+      tag: 'U.S. Divers · Scuba Gear',
+      accentWord: 'Scuba',
+      headline: 'U.S. Divers Scuba Systems',
+      subheadline: 'Wetsuits, BCDs, regulators, and open-heel fins — pro-grade U.S. Divers kit for the dive shop serving certified divers, not just snorkelers.',
       ctaPrimary: { text: 'Shop US Divers', link: '/products', brand: 'us-divers' },
       ctaSecondary: { text: 'Visit US Divers', link: '/brand', brand: 'us-divers' },
       image: '/hero/US_Divers_2.webp',
@@ -248,10 +251,10 @@ export const data = {
     },
     {
       id: 'slide-us-divers-3',
-      tag: 'Sunset Snorkel',
-      accentWord: 'Golden',
-      headline: 'When the Crew Walks Into Golden Hour',
-      subheadline: 'Snorkel kits and beach gear from US Divers — the shore-day staple your guests are still talking about at dinner.',
+      tag: 'U.S. Divers · Fins & Snorkel Sets',
+      accentWord: 'Fins',
+      headline: 'U.S. Divers Fins & Snorkel Sets',
+      subheadline: 'Mask, snorkel, and fin combos packed to travel — the U.S. Divers set your guests carry down to the water and take home after.',
       ctaPrimary: { text: 'Shop US Divers', link: '/products', brand: 'us-divers' },
       ctaSecondary: { text: 'Visit US Divers', link: '/brand', brand: 'us-divers' },
       image: '/hero/US_Divers_3.webp',
@@ -261,10 +264,10 @@ export const data = {
     },
     {
       id: 'slide-us-divers-4',
-      tag: 'Family Snorkel',
-      accentWord: 'First Mask',
-      headline: 'The First Mask Is the One They Remember',
-      subheadline: 'US Divers kid-fit snorkel sets — the bestseller in every Caribbean resort kiosk, and the start of a thousand reef stories.',
+      tag: 'U.S. Divers · Youth Snorkel Sets',
+      accentWord: 'Youth',
+      headline: 'U.S. Divers Youth Snorkel Sets',
+      subheadline: 'Kid-fit masks and snorkels sized for smaller faces — the U.S. Divers set that moves fastest at Caribbean resort kiosks.',
       ctaPrimary: { text: 'Shop US Divers', link: '/products', brand: 'us-divers' },
       ctaSecondary: { text: 'Visit US Divers', link: '/brand', brand: 'us-divers' },
       image: '/hero/US_Divers_4.webp',
@@ -274,10 +277,10 @@ export const data = {
     },
     {
       id: 'slide-us-divers-5',
-      tag: 'Underwater',
-      accentWord: 'Submerge',
-      headline: 'Submerge into the Quiet',
-      subheadline: 'US Divers full-face masks and travel snorkels — what your reef-bound guests reach for first, and what they ask to take home.',
+      tag: 'U.S. Divers · Masks & Snorkels',
+      accentWord: 'Masks',
+      headline: 'U.S. Divers Masks & Snorkels',
+      subheadline: 'Wide-view snorkel masks paired with dry-top snorkels — the U.S. Divers gear reef-bound guests reach for first, branded right where it shows.',
       ctaPrimary: { text: 'Shop US Divers', link: '/products', brand: 'us-divers' },
       ctaSecondary: { text: 'Visit US Divers', link: '/brand', brand: 'us-divers' },
       image: '/hero/US_divers_5.webp',
@@ -287,10 +290,10 @@ export const data = {
     },
     {
       id: 'slide-yukon-1',
-      tag: 'Backcountry',
-      accentWord: 'Solitude',
-      headline: 'Where Solitude Has a Soundtrack of Snow',
-      subheadline: "Yukon Charlie's snowshoes and trekking poles — built for the backcountry retailer whose customers actually use them.",
+      tag: "Yukon Charlie's · Snowshoes",
+      accentWord: 'Snowshoes',
+      headline: "Yukon Charlie's Snowshoes",
+      subheadline: "Aluminum-frame snowshoes with adjustable bindings and trekking poles — the Yukon Charlie's backcountry line for outdoor specialty retailers.",
       ctaPrimary: { text: "Shop Yukon Charlie's", link: '/products', brand: 'yukon-charlies' },
       ctaSecondary: { text: "View Yukon Charlie's Catalog", link: '#catalogs', catalog: 'yukon-charlies' },
       image: '/hero/Yukon-1.jpg',
@@ -300,10 +303,10 @@ export const data = {
     },
     {
       id: 'slide-yukon-2',
-      tag: 'Winter Adventure',
-      accentWord: 'Vista',
-      headline: 'Hike to the Vista. Stay for the Quiet.',
-      subheadline: "Yukon Charlie's winter lineup — the snowshoe brand specialty shops keep restocking, season after season.",
+      tag: "Yukon Charlie's · Snowshoes & Poles",
+      accentWord: 'Poles',
+      headline: "Yukon Charlie's Snowshoes & Poles",
+      subheadline: "Trail-ready snowshoe kits bundled with adjustable poles and carry totes — the Yukon Charlie's winter line specialty shops restock season after season.",
       ctaPrimary: { text: "Shop Yukon Charlie's", link: '/products', brand: 'yukon-charlies' },
       ctaSecondary: { text: "View Yukon Charlie's Catalog", link: '#catalogs', catalog: 'yukon-charlies' },
       image: '/hero/Yukon_2.jpg',
@@ -456,89 +459,358 @@ export const data = {
   ],
 
   // Manufacturer catalogs with logos and Flipsnack embeds
+  // Digital catalogs. A brand may publish several, so `id` is unique per catalog
+  // and `brandId` links back to the brands array for artwork.
+  // Embed notes:
+  //  - Flipsnack: MUST use player.flipsnack.com. The /full-view.html pages send
+  //    `frame-ancestors 'none'`, and the older cdn.flipsnack.com/widget/v2 endpoint
+  //    now answers "error loading the collection" for every hash.
+  //    hash = base64("<accountId>+<collectionId>"); read it off the full-view page,
+  //    which embeds `player.flipsnack.com/?hash=...`.
+  //  - FlipHTML5 + Supabase PDFs iframe directly.
   catalogs: [
     {
-      id: 'airhead',
+      id: 'airhead-towables-2026',
+      cover: '/catalog-covers/airhead-towables-2026.jpg',
+      brandId: 'airhead',
       name: 'Airhead',
+      title: 'Towables',
       logo: '/logos/Airhead-Primary-Logo-website.png',
       image: '/hero/Airhead-1.webp',
-      catalogUrl: 'https://cdn.flipsnack.com/widget/v2/widget.html?hash=NzY2RDlCOTlFOEMrdjE5d2MxMTZyaA',
-      description: 'Water sports towables, tubes, and accessories for every adventure.',
+      catalogUrl: 'https://player.flipsnack.com/?hash=NzY2RDlCOTlFOEMrem4zYjNsZms5cw',
+      description: 'Multi-rider towable tubes, tow ropes, and rigging hardware.',
       year: '2026'
     },
     {
-      id: 'sportsstuff',
-      name: 'SportsStuff',
-      logo: '/logos/sportsstuffcom.png',
-      image: '/hero/Sportsstuff_3.webp',
-      catalogUrl: 'https://cdn.flipsnack.com/widget/v2/widget.html?hash=NzY2RDlCOTlFOEMrdXBzNjVhYWppcQ',
-      description: 'Premium towables, water sports gear, and outdoor recreation equipment.',
-      year: '2026 27'
+      id: 'airhead-watersports-2026',
+      cover: '/catalog-covers/airhead-watersports-2026.jpg',
+      brandId: 'airhead',
+      name: 'Airhead',
+      title: 'Watersports',
+      logo: '/logos/Airhead-Primary-Logo-website.png',
+      image: '/hero/Airhead_2.webp',
+      catalogUrl: 'https://player.flipsnack.com/?hash=NzY2RDlCOTlFOEMrZHBtZ21mOGNqbA',
+      description: 'Wakesurf and wakeboard decks, life vests, and ropes.',
+      year: '2026'
     },
     {
-      id: 'yukon-charlies',
+      id: 'aqua-leisure-specialty-2026',
+      cover: '/catalog-covers/aqua-leisure-specialty-2026.jpg',
+      brandId: 'aqua-leisure',
+      name: 'Aqua Leisure',
+      title: 'Aqua Specialty',
+      logo: '/logos/aqua_leisure.png',
+      image: '/hero/Aqua_Leisure-1.jpg',
+      catalogUrl: 'https://player.flipsnack.com/?hash=NzY2RDlCOTlFOEMrdmhtNDgwYWppcQ',
+      description: 'Pool floats, loungers, ring tubes, and swim gear.',
+      year: '2026'
+    },
+    {
+      id: 'sportsstuff-2026',
+      cover: '/catalog-covers/sportsstuff-2026.jpg',
+      brandId: 'sportsstuff',
+      name: 'SportsStuff',
+      title: 'Full Line',
+      logo: '/logos/sportsstuff.png',
+      image: '/hero/Sportsstuff_3.webp',
+      catalogUrl: 'https://player.flipsnack.com/?hash=NzY2RDlCOTlFOEMrN3RrcW5wY3J6cA',
+      description: 'Party islands, pool lounges, towables, and snow tubes.',
+      year: '2025/26'
+    },
+    {
+      id: 'yukon-charlies-2026',
+      cover: '/catalog-covers/yukon-charlies-2026.jpg',
+      brandId: 'yukon-charlies',
       name: "Yukon Charlie's",
+      title: 'Full Line',
       logo: '/logos/Yukon-Charlies_Primary-Logo_Stacked_Black-Blue.png',
       image: '/hero/Yukon_2.jpg',
-      catalogUrl: 'https://cdn.flipsnack.com/widget/v2/widget.html?hash=NzY2RDlCOTlFOEMrN3huYTFra3Z4bg',
+      catalogUrl: 'https://player.flipsnack.com/?hash=NzY2RDlCOTlFOEMrN2ppb2w1M3RrNQ',
       description: 'Snowshoes, trekking poles, and winter outdoor equipment.',
-      year: '2026 27'
+      year: '2025/26'
     },
     {
-      id: 'aqua-leisure',
-      name: 'Aqua Leisure',
-      logo: '/logos/aqua-leisure-vendor.png',
-      image: '/hero/Aqua_Leisure-1.jpg',
-      catalogUrl: 'https://cdn.flipsnack.com/widget/v2/widget.html?hash=NzY2RDlCOTlFOEMrdmhtNDgwYWppcQ',
-      description: 'Pool floats, swim gear, and aquatic leisure products.',
+      id: 'us-divers-2027',
+      cover: '/catalog-covers/us-divers-2027.jpg',
+      brandId: 'us-divers',
+      name: 'U.S. Divers',
+      title: 'Full Line',
+      logo: '/logos/us_divers.png',
+      image: '/hero/US_Divers-1.webp',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/USDivers-catalog2027_short_3/',
+      description: 'Snorkel sets, masks, fins, and pro-grade scuba systems.',
+      year: '2027'
+    },
+    {
+      id: 'lionel-2026',
+      cover: '/catalog-covers/lionel-2026.jpg',
+      brandId: 'lionel',
+      name: 'Lionel',
+      title: 'Full Line',
+      logo: '/logos/lionel.png',
+      image: '/hero/Lionel-2.jpg',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/lionel-2026.pdf',
+      description: "America's favorite model trains since 1900.",
       year: '2026'
     },
     {
-      id: 'lionel',
-      name: 'Lionel',
-      logo: '/logos/lionel-vendor.png',
-      image: '/hero/Lionel-2.jpg',
-      catalogUrl: '',
-      description: 'America\'s favorite model trains since 1900.',
-      year: ''
-    },
-    {
-      id: 'masterpieces',
+      id: 'masterpieces-2026',
+      cover: '/catalog-covers/masterpieces-2026.jpg',
+      brandId: 'masterpieces',
       name: 'MasterPieces',
+      title: 'Full Line',
       logo: '/logos/masterpieces-logo.png',
       image: '/hero/Masterpiece_1.jpg',
-      catalogUrl: '',
-      description: 'Puzzles and games — an American puzzle company.',
-      year: ''
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/iweo/',
+      description: 'Jigsaw puzzles, games, and the National Parks collection.',
+      year: '2026'
     },
     {
-      id: 'trophy-music',
-      name: 'Trophy Music',
+      id: 'silver-circle-2026',
+      cover: '/catalog-covers/silver-circle-2026.jpg',
+      brandId: 'silver-circle',
+      name: 'Silver Circle',
+      title: 'Full Line',
+      logo: '/logos/toys_by_nature.png',
+      image: '/hero/Silver_Circle-1.webp',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/silver_circle_catalog_2026/',
+      description: 'Terrarium kits, nature toys, and exploration sets.',
+      year: '2026'
+    },
+    {
+      id: '3d-toy-store-2026',
+      cover: '/catalog-covers/3d-toy-store-2026.jpg',
+      brandId: '3d-toy-store',
+      name: 'The 3D Toy Store',
+      title: 'Full Line',
       logo: '/logos/trophy_music_co.png',
+      image: '/brands/3d_toy_store/the_3d_toy_store_hero_1.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/3d_toy_store_catalog_2026/',
+      description: '3D printed and collectible toys for gift shops.',
+      year: '2026'
+    },
+    {
+      id: 'trophy-music-2025',
+      cover: '/catalog-covers/trophy-music-2025.jpg',
+      brandId: 'trophy-music',
+      name: 'Trophy Music',
+      title: 'Full Line',
+      logo: '/logos/3d_toy_store.png',
       image: '/brands/trophy_music/trophy_music_hero_3.png',
-      catalogUrl: '',
       pdfUrl: '/catalogs/trophy_music_catalog_2025.pdf',
-      description: 'Kid friendly musical instruments and music toys for gift shops and resorts.',
+      description: 'Kid-friendly musical instruments and music toys.',
       year: '2025'
     },
     {
-      id: 'silver-circle',
-      name: 'Silver Circle',
-      logo: '/logos/toys_by_nature.png',
-      image: '/hero/Silver_Circle-1.webp',
-      catalogUrl: '',
-      pdfUrl: '/catalogs/silver_circle_catalog_2026.pdf',
-      description: 'Educational nature toys and exploration kits for resorts.',
+      id: 'ovvel-2026',
+      cover: '/catalog-covers/ovvel-2026.jpg',
+      brandId: 'ovvel',
+      name: 'Ovvel',
+      title: 'Full Line',
+      logo: '/logos/ovvel.png',
+      image: '/brands/ovvel/ovvel_hero_1.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/OVVEL-2026-Catalog/',
+      description: 'Beach toys, sand toys, and outdoor play essentials.',
       year: '2026'
     },
     {
-      id: '3d-toy-store',
-      name: 'The 3D Toy Store',
-      logo: '/logos/3d_toy_store.png',
-      image: '/brands/3d_toy_store/the_3d_toy_store_hero_1.png',
-      catalogUrl: '',
-      pdfUrl: '/catalogs/3d_toy_store_catalog_2026.pdf',
-      description: '3D printed and collectible toys for gift shops.',
+      id: 'boss-play-2026',
+      cover: '/catalog-covers/boss-play-2026.jpg',
+      brandId: 'boss-play',
+      name: 'Boss Play',
+      title: 'Klix & Kooleyo',
+      logo: '/logos/boss_play.png',
+      image: '/brands/boss_play/boss_play_hero_1.png',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/boss-play-klix-kooleyo-2026.pdf',
+      description: 'The Klix and Kooleyo active play lines.',
+      year: '2026'
+    },
+    {
+      id: 'sat-1-sport',
+      cover: '/catalog-covers/sat-1-sport.jpg',
+      brandId: 'sat1-sport',
+      name: 'SAT1 Sport',
+      title: 'Sport',
+      logo: '/logos/sat-1-B.png',
+      image: '/brands/SAT1_sport/sat1_sport_hero_1.png',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/sat-1-sport.pdf',
+      description: 'Beach volleyball, balls, and resort sports equipment.',
+      year: '2026'
+    },
+    {
+      id: 'bebo-head-2026',
+      cover: '/catalog-covers/bebo-head-2026.jpg',
+      brandId: 'bebo-head',
+      name: 'Bebo Head',
+      title: 'Full Line',
+      logo: '/logos/bebo-head.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/qvxh/',
+      description: 'The full Bebo Head lineup.',
+      year: '2026'
+    },
+    {
+      id: 'edgewood-wild-in-color-2026',
+      cover: '/catalog-covers/edgewood-wild-in-color-2026.jpg',
+      brandId: 'edgewood-puzzles',
+      name: 'Edgewood Puzzles',
+      title: 'Wild in Color',
+      logo: '/logos/edgewood-puzzles.png',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/edgewood-wild-in-color-2026.pdf',
+      description: 'The Wild in Color puzzle collection.',
+      year: '2026'
+    },
+    {
+      id: 'edgewood-ron-magill-2026',
+      cover: '/catalog-covers/edgewood-ron-magill-2026.jpg',
+      brandId: 'edgewood-puzzles',
+      name: 'Edgewood Puzzles',
+      title: 'Ron Magill',
+      logo: '/logos/edgewood-puzzles.png',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/edgewood-ron-magill-2026.pdf',
+      description: 'The Ron Magill wildlife photography puzzle series.',
+      year: '2026'
+    },
+    {
+      id: 'edgewood-cherp-studio-2026',
+      cover: '/catalog-covers/edgewood-cherp-studio-2026.jpg',
+      brandId: 'edgewood-puzzles',
+      name: 'Edgewood Puzzles',
+      title: 'Cherp Studio',
+      logo: '/logos/edgewood-puzzles.png',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/edgewood-cherp-studio-2026.pdf',
+      description: 'The Cherp Studio artist puzzle collection.',
+      year: '2026'
+    },
+    {
+      id: 'freds-swim-academy-2026',
+      cover: '/catalog-covers/freds-swim-academy-2026.jpg',
+      brandId: 'freds-swim-academy',
+      name: "Fred's Swim Academy",
+      title: 'USA',
+      logo: '/logos/freds-swim-academy.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/rryq/',
+      description: 'Swimtrainer floats and learn-to-swim gear.',
+      year: '2026'
+    },
+    {
+      id: 'just-speed-freeze-2026',
+      cover: '/catalog-covers/just-speed-freeze-2026.jpg',
+      brandId: 'just-speed',
+      name: 'Just Speed',
+      title: 'Freeze',
+      logo: '/logos/just-speed.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/icas/',
+      description: 'The Freeze line of novelty and impulse product.',
+      year: '2026'
+    },
+    {
+      id: 'just-speed-zoom-2025',
+      cover: '/catalog-covers/just-speed-zoom-2025.jpg',
+      brandId: 'just-speed',
+      name: 'Just Speed',
+      title: 'Zoom Fast',
+      logo: '/logos/just-speed.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/lqtz/',
+      description: 'The Zoom Fast line.',
+      year: '2025'
+    },
+    {
+      id: 'just-speed-plush-2025',
+      cover: '/catalog-covers/just-speed-plush-2025.jpg',
+      brandId: 'just-speed',
+      name: 'Just Speed',
+      title: "It's Plush Time",
+      logo: '/logos/just-speed.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/wpyv/',
+      description: 'The plush and soft toy collection.',
+      year: '2025'
+    },
+    {
+      id: 'just-speed-starbucks-bear',
+      cover: '/catalog-covers/just-speed-starbucks-bear.jpg',
+      brandId: 'just-speed',
+      name: 'Just Speed',
+      title: 'Starbucks Bear',
+      logo: '/logos/just-speed.png',
+      pdfUrl: 'https://gtoigweljyuoxbhytkgh.supabase.co/storage/v1/object/public/catalogs/just-speed-starbucks-bear.pdf',
+      description: 'The Starbucks Bear collectible program.',
+      year: '2026'
+    },
+    {
+      id: 'ledlenser-usa-2026',
+      cover: '/catalog-covers/ledlenser-usa-2026.jpg',
+      brandId: 'ledlenser',
+      name: 'Ledlenser',
+      title: 'USA',
+      logo: '/logos/ledlenser.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/Ledlenser-USA-Catalog-2026_SM/',
+      description: 'German-engineered flashlights, headlamps, and lanterns.',
+      year: '2026'
+    },
+    {
+      id: 'uzzi-2026',
+      cover: '/catalog-covers/uzzi-2026.jpg',
+      brandId: 'uzzi',
+      name: 'Uzzi',
+      title: 'Full Line',
+      logo: '/logos/uzzi.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/xutf/',
+      description: 'The full Uzzi lineup.',
+      year: '2026'
+    },
+    {
+      id: 'uzzi-nick-2026',
+      cover: '/catalog-covers/uzzi-nick-2026.jpg',
+      brandId: 'uzzi',
+      name: 'Uzzi',
+      title: 'Nick',
+      logo: '/logos/uzzi.png',
+      catalogUrl: 'https://online.fliphtml5.com/dwiaq/CATALOG_NICK_2026web/',
+      description: 'The Nick licensed collection.',
+      year: '2026'
+    },
+    {
+      id: 'sport-design-sports-ball',
+      cover: '/catalog-covers/sport-design-sports-ball.jpg',
+      brandId: 'sport-design',
+      name: 'Sport Design',
+      title: 'Sports Ball',
+      logo: '/logos/sport-design.png',
+      catalogUrl: 'https://online.fliphtml5.com/SportDesign/cvht/',
+      description: 'The full sports ball range.',
+      year: '2026'
+    },
+    {
+      id: 'sport-design-playground',
+      cover: '/catalog-covers/sport-design-playground.jpg',
+      brandId: 'sport-design',
+      name: 'Sport Design',
+      title: 'Playground & Playball',
+      logo: '/logos/sport-design.png',
+      catalogUrl: 'https://online.fliphtml5.com/SportDesign/szgj/',
+      description: 'Playground balls and playball assortments.',
+      year: '2026'
+    },
+    {
+      id: 'sport-design-outdoor-games',
+      cover: '/catalog-covers/sport-design-outdoor-games.jpg',
+      brandId: 'sport-design',
+      name: 'Sport Design',
+      title: 'Outdoor Games & Accessories',
+      logo: '/logos/sport-design.png',
+      catalogUrl: 'https://online.fliphtml5.com/SportDesign/odcy/',
+      description: 'Lawn games, outdoor play, and accessories.',
+      year: '2026'
+    },
+    {
+      id: 'sport-design-wire-bin',
+      cover: '/catalog-covers/sport-design-wire-bin.jpg',
+      brandId: 'sport-design',
+      name: 'Sport Design',
+      title: 'Wire Bin Program',
+      logo: '/logos/sport-design.png',
+      catalogUrl: 'https://online.fliphtml5.com/SportDesign/WIRE-BIN---CATALOG-RZWR/',
+      description: 'Retail wire bin merchandising programs.',
       year: '2026'
     }
   ],
@@ -624,7 +896,7 @@ export const data = {
       category: 'beach-toys',
       heroImage: '/brands/SAT1_sport/sat1_sport_hero_1.png',
       images: ['/brands/SAT1_sport/sat1_sport_hero_2.png', '/brands/SAT1_sport/sat1_sport_hero_3.png', '/brands/SAT1_sport/sat1_sport_hero_4.png', '/brands/SAT1_sport/sat1_sport_hero_5.png', '/brands/SAT1_sport/sat1_sport_hero_6.png'],
-      logo: '',
+      logo: '/logos/sat-1-B.png',
       featured: false
     },
     {
@@ -636,6 +908,84 @@ export const data = {
       heroImage: '/brands/aqua_divers/aqua_divers_hero_1.png',
       images: ['/brands/aqua_divers/aqua_divers_hero_2.png', '/brands/aqua_divers/aqua_divers_hero_3.png', '/brands/aqua_divers/aqua_divers_hero_4.png', '/brands/aqua_divers/aqua_divers_hero_5.png', '/brands/aqua_divers/aqua_divers_hero_6.png'],
       logo: '',
+      featured: false
+    },
+    // Catalog-only brands — logo artwork on hand, no brand photography yet.
+    {
+      id: 'bebo-head',
+      name: 'Bebo Head',
+      tagline: 'Play Out Loud',
+      description: 'The full Bebo Head lineup.',
+      category: 'outdoor-play',
+      heroImage: '',
+      images: [],
+      logo: '/logos/bebo-head.png',
+      featured: false
+    },
+    {
+      id: 'edgewood-puzzles',
+      name: 'Edgewood Puzzles',
+      tagline: 'Pieces With Purpose',
+      description: 'Artist-series and wildlife photography jigsaw puzzles.',
+      category: 'puzzles',
+      heroImage: '',
+      images: [],
+      logo: '/logos/edgewood-puzzles.png',
+      featured: false
+    },
+    {
+      id: 'freds-swim-academy',
+      name: "Fred's Swim Academy",
+      tagline: 'Learn to Swim',
+      description: 'Swimtrainer floats and learn-to-swim gear.',
+      category: 'water-sports',
+      heroImage: '',
+      images: [],
+      logo: '/logos/freds-swim-academy.png',
+      featured: false
+    },
+    {
+      id: 'just-speed',
+      name: 'Just Speed',
+      tagline: 'Impulse & Plush',
+      description: 'Novelty, plush, and collectible impulse programs.',
+      category: 'outdoor-play',
+      heroImage: '',
+      images: [],
+      logo: '/logos/just-speed.png',
+      featured: false
+    },
+    {
+      id: 'ledlenser',
+      name: 'Ledlenser',
+      tagline: 'German Engineered Light',
+      description: 'Flashlights, headlamps, and lanterns.',
+      category: 'outdoor-play',
+      heroImage: '',
+      images: [],
+      logo: '/logos/ledlenser.png',
+      featured: false
+    },
+    {
+      id: 'sport-design',
+      name: 'Sport Design',
+      tagline: 'Balls & Outdoor Games',
+      description: 'Sports balls, playground balls, lawn games, and wire bin programs.',
+      category: 'outdoor-play',
+      heroImage: '',
+      images: [],
+      logo: '/logos/sport-design.png',
+      featured: false
+    },
+    {
+      id: 'uzzi',
+      name: 'Uzzi',
+      tagline: 'Licensed & Lifestyle',
+      description: 'The full Uzzi lineup and licensed collections.',
+      category: 'outdoor-play',
+      heroImage: '',
+      images: [],
+      logo: '/logos/uzzi.png',
       featured: false
     },
     {
@@ -786,3 +1136,67 @@ export const data = {
     return all;
   }
 };
+
+// Catalog ids are unique per catalog (a brand may publish several), so callers
+// holding only a brand id use these resolvers instead of `catalogs.find(c => c.id === brandId)`.
+export function catalogsForBrand(brandId) {
+  return data.catalogs.filter(c => c.brandId === brandId && (c.catalogUrl || c.pdfUrl));
+}
+
+export function primaryCatalogForBrand(brandId) {
+  return catalogsForBrand(brandId)[0] || null;
+}
+
+// Accepts either a catalog id or a brand id, so callers that only know the brand
+// (hero CTAs, navbar, brand pages) resolve to that brand's first catalog.
+export function resolveCatalog(idOrBrandId) {
+  if (!idOrBrandId) return null;
+  const exact = data.catalogs.find(
+    c => c.id === idOrBrandId && (c.catalogUrl || c.pdfUrl)
+  );
+  return exact || primaryCatalogForBrand(idOrBrandId);
+}
+
+// Buyer-facing groupings for the catalog library filter.
+// Brand `category` is too lopsided to filter on (16 of 30 catalogs sit in
+// 'outdoor-play'), so catalogs are grouped by manufacturer instead.
+// To re-file a manufacturer, move its id between the `brands` arrays below.
+export const catalogFamilies = [
+  { id: 'water',       label: 'Water & Pool',        brands: ['airhead', 'sportsstuff', 'aqua-leisure', 'us-divers', 'freds-swim-academy'] },
+  { id: 'beach',       label: 'Beach & Outdoor',     brands: ['ovvel', 'sat1-sport', 'sport-design', 'yukon-charlies', 'ledlenser'] },
+  { id: 'toys',        label: 'Toys & Novelty',      brands: ['bebo-head', 'just-speed', 'uzzi', 'boss-play', '3d-toy-store'] },
+  { id: 'puzzles',     label: 'Puzzles & Discovery', brands: ['masterpieces', 'edgewood-puzzles', 'silver-circle'] },
+  { id: 'trains',      label: 'Trains & Music',      brands: ['lionel', 'trophy-music'] }
+];
+
+export function familyIdFor(brandId) {
+  const f = catalogFamilies.find(fam => fam.brands.includes(brandId));
+  return f ? f.id : 'other';
+}
+
+// Product Highlights — real interior pages lifted from the manufacturers' own
+// catalogs, curated by hand (not every page is a product page; brand-ad spreads
+// were rejected). `page` is the viewer page param the image was captured at, so
+// clicking a tile opens that catalog on the same spread.
+// To add one: screenshot the page, drop it in /public/catalog-pages, add a row.
+export const productHighlights = [
+  { catalogId: 'aqua-leisure-specialty-2026', page: 5,  label: '4-in-1 Monterey Hammock',    image: '/catalog-pages/aqua-leisure-specialty-2026__p5.jpg' },
+  { catalogId: 'airhead-towables-2026',       page: 11, label: 'Super Mable Towables',       image: '/catalog-pages/airhead-towables-2026__p11.jpg' },
+  { catalogId: 'just-speed-plush-2025',       page: 5,  label: 'Custom-Name Plush Animals',  image: '/catalog-pages/just-speed-plush-2025__p5.jpg' },
+  { catalogId: 'masterpieces-2026',           page: 5,  label: 'New for 2026',               image: '/catalog-pages/masterpieces-2026__p5.jpg' },
+  { catalogId: 'sport-design-sports-ball',    page: 5,  label: 'Classic Stitched Footballs', image: '/catalog-pages/sport-design-sports-ball__p5.jpg' },
+  { catalogId: 'us-divers-2027',              page: 11, label: 'Gear & Travel Bags',         image: '/catalog-pages/us-divers-2027__p11.jpg' },
+  { catalogId: 'silver-circle-2026',          page: 5,  label: 'WaterPlants Aquascape Kit',  image: '/catalog-pages/silver-circle-2026__p5.jpg' },
+  { catalogId: 'sportsstuff-2026',            page: 5,  label: 'Snow Skates & Snowshoes',    image: '/catalog-pages/sportsstuff-2026__p5.jpg' },
+  { catalogId: 'uzzi-2026',                   page: 11, label: 'Hawaiian Dri-Fit Sets',      image: '/catalog-pages/uzzi-2026__p11.jpg' },
+  { catalogId: 'ovvel-2026',                  page: 11, label: 'Ovvel Watches',              image: '/catalog-pages/ovvel-2026__p11.jpg' }
+];
+
+// Deep-links a catalog to a page. Flipsnack takes ?p=, FlipHTML5 takes #p=,
+// PDFs take #page= — all verified against the live viewers.
+export function catalogPageUrl(catalog, page) {
+  if (!catalog) return '';
+  if (catalog.pdfUrl) return `${catalog.pdfUrl}#page=${page}`;
+  if (catalog.catalogUrl.includes('flipsnack')) return `${catalog.catalogUrl}&p=${page}`;
+  return `${catalog.catalogUrl}#p=${page}`;
+}

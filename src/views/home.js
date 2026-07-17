@@ -1,4 +1,4 @@
-import { data } from '../js/data.js';
+import { data, resolveCatalog, primaryCatalogForBrand, catalogFamilies, familyIdFor, productHighlights, catalogPageUrl } from '../js/data.js';
 import { router } from '../js/router.js';
 import { cart } from '../js/cart.js';
 import { store } from '../js/state.js';
@@ -12,6 +12,8 @@ export function homeView() {
   const container = document.createElement('div');
   container.className = 'home-page';
 
+  const liveCatalogs = data.catalogs.filter(c => c.catalogUrl || c.pdfUrl);
+
   container.innerHTML = `
     <!-- ============ HERO ============ -->
     <section class="hero" id="hero">
@@ -22,7 +24,7 @@ export function homeView() {
       <!-- Fullscreen background images -->
       ${data.heroSlides.map((slide, i) => `
         <div class="hero-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
-          <div class="hero-slide-bg" style="background-image: url('${slide.image}')"></div>
+          <div class="hero-slide-bg" style="--bg-wide: url('${slide.image}'); --bg-tall: url('${slide.imagePortrait || slide.image}')"></div>
         </div>
       `).join('')}
       <div class="hero-overlay"></div>
@@ -59,89 +61,123 @@ export function homeView() {
 
     <div class="main-content-gradient">
 
-    <!-- ============ DIGITAL CATALOGS GALLERY ============ -->
-    <section class="section catalog-gallery" id="catalogs">
+    <!-- ============ CATALOG LIBRARY ============ -->
+    <section class="section catalog-library" id="catalogs">
       <div class="section-container">
-        <div class="catalog-gallery-header">
-          <div class="catalog-gallery-text">
-            <h2 class="catalog-headline">Browse the Latest Product <span class="title-cursive title-orange">Catalogs</span></h2>
-            <p class="catalog-subtext">Flip through full product lines, specs, and pricing from our manufacturers. Plan your next order without leaving the page.</p>
-          </div>
-          <div class="catalog-gallery-arrows">
-            <button class="catalog-arrow catalog-arrow-prev" id="catalog-prev" aria-label="Previous catalog">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button class="catalog-arrow catalog-arrow-next" id="catalog-next" aria-label="Next catalog">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
+        <div class="lib-header">
+          <h2 class="catalog-headline">Browse the Latest Product <span class="title-cursive title-orange">Catalogs</span></h2>
+          <p class="catalog-subtext">Every current catalog from our manufacturers — open any cover to flip through full product lines, specs, and pricing without leaving the page.</p>
+          <div class="lib-meta">
+            <span class="lib-count" id="lib-range">Showing 1–10 of ${liveCatalogs.length}</span>
+            <span class="lib-dot"></span>
+            <span>${new Set(liveCatalogs.map(c => c.brandId)).size} manufacturers</span>
           </div>
         </div>
-      <div class="section-container section-container--wide">
-        <div class="catalog-gallery-track-wrap">
-          <div class="catalog-gallery-track" id="catalog-gallery-track">
-            ${data.catalogs.filter(c => c.catalogUrl || c.pdfUrl).map(catalog => {
-              const brand = data.brands.find(b => b.id === catalog.id);
-              const bgImage = catalog.image || (brand ? brand.heroImage : '');
-              const brandLogo = catalog.logo || (brand ? brand.logo : '');
-              return `
-              <div class="catalog-gallery-card" data-catalog-id="${catalog.id}">
-                <div class="catalog-gallery-card-img">
-                  <img src="${bgImage}" alt="${catalog.name}" loading="lazy" />
-                  <div class="catalog-gallery-card-overlay"></div>
-                  ${brandLogo ? `
-                  <div class="catalog-gallery-card-logo">
-                    <img src="${brandLogo}" alt="${catalog.name} logo" />
-                  </div>` : ''}
+
+        <div class="lib-filters" id="lib-filters" role="tablist">
+          <button class="lib-chip active" data-family="all" role="tab" aria-selected="true">
+            All <span class="lib-chip-n">${liveCatalogs.length}</span>
+          </button>
+          ${catalogFamilies.map(f => {
+            const n = liveCatalogs.filter(c => familyIdFor(c.brandId) === f.id).length;
+            return n ? `<button class="lib-chip" data-family="${f.id}" role="tab" aria-selected="false">
+              ${f.label} <span class="lib-chip-n">${n}</span>
+            </button>` : '';
+          }).join('')}
+        </div>
+
+        <div class="lib-grid" id="lib-grid">
+          ${liveCatalogs.map((catalog, i) => {
+            const brand = data.brands.find(b => b.id === catalog.brandId);
+            const brandLogo = catalog.logo || (brand ? brand.logo : '');
+            const cover = catalog.cover || '';
+            const sub = catalog.title && catalog.title !== 'Full Line' ? catalog.title : 'Full Line';
+            return `
+            <article class="lib-card" data-catalog-id="${catalog.id}" data-family="${familyIdFor(catalog.brandId)}" style="--i:${i}" tabindex="0" role="button" aria-label="Open ${catalog.name} ${catalog.year} ${sub} catalog">
+              <div class="lib-cover">
+                <div class="lib-cover-fallback">
+                  ${brandLogo ? `<img src="${brandLogo}" alt="${catalog.name}" loading="lazy" />` : `<span>${catalog.name}</span>`}
                 </div>
-                <div class="catalog-gallery-card-body">
-                  <span class="catalog-gallery-card-year">${catalog.year} Catalog</span>
-                  <h3 class="catalog-gallery-card-title">${catalog.name}</h3>
-                  <p class="catalog-gallery-card-desc">${catalog.description}</p>
-                  <span class="catalog-gallery-card-cta">
-                    ${catalog.pdfUrl
-                      ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                         View PDF`
-                      : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-                         Open Catalog`
-                    }
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                ${cover
+                  ? `<div class="lib-cover-blur" style="background-image:url('${cover}')"></div>
+                     <img class="lib-cover-img" src="${cover}" alt="${catalog.name} ${catalog.year} ${sub} catalog cover" loading="lazy"
+                          onerror="this.closest('.lib-cover').classList.add('lib-cover--nocover')" />`
+                  : ''
+                }
+                <div class="lib-hover">
+                  <span class="lib-open">
+                    Open
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                   </span>
                 </div>
-              </div>`;
-            }).join('')}
-          </div>
+              </div>
+              <div class="lib-info">
+                <div class="lib-info-text">
+                  <h3 class="lib-brand">${catalog.name}</h3>
+                  <p class="lib-title">${sub} <span class="lib-year">· ${catalog.year}</span></p>
+                </div>
+                <span class="lib-format" title="${catalog.pdfUrl ? 'PDF document' : 'Interactive flipbook'}">${catalog.pdfUrl ? 'PDF' : 'Flipbook'}</span>
+              </div>
+            </article>`;
+          }).join('')}
         </div>
+
+        <p class="lib-empty" id="lib-empty" hidden>No catalogs in this category yet.</p>
+
+        <nav class="lib-pager" id="lib-pager" aria-label="Catalog pages">
+          <button class="lib-pager-arrow" id="lib-prev" aria-label="Previous page">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="lib-pager-pages" id="lib-pager-pages"></div>
+          <button class="lib-pager-arrow" id="lib-next" aria-label="Next page">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </nav>
       </div>
     </section>
 
-    <!-- ============ INTERACTIVE BENTO CATEGORY GALLERY ============ -->
-    <section class="section interactive-gallery-section" id="categories">
+    <!-- ============ PRODUCT HIGHLIGHTS (real catalog pages) ============ -->
+    <section class="section highlights-section" id="categories">
       <div class="section-container">
         <div class="section-header section-header-center">
           <div>
-            <h2 class="section-title">Shop by <span class="title-cursive title-green">Category</span></h2>
-            <p class="section-subtitle">A collection of stunning categories. Drag to explore, click to shop.</p>
+            <h2 class="section-title">See What We <span class="title-cursive title-green">Carry</span></h2>
+            <p class="section-subtitle">Real pages from the 2026 lines — actual products, SKUs, and case packs. Click any page to open that catalog right where you left off.</p>
           </div>
         </div>
-      </div>
 
-      <div class="category-gallery-viewport" id="category-gallery">
-        <div class="category-gallery-grid">
-          ${data.categories.map((cat, i) => {
-            const spans = ['span-large', 'span-tall', 'span-small', 'span-small', 'span-tall', 'span-large', 'span-small', 'span-small'];
-            const spanClass = spans[i % spans.length];
+        <div class="hl-rail-wrap">
+          <button class="hl-nav hl-nav--prev" id="hl-prev" aria-label="Previous products">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
 
-            return `
-              <div class="category-gallery-item ${spanClass}" data-category-id="${cat.id}" tabindex="0" role="button" aria-label="View ${cat.name}">
-                <img src="${cat.image}" alt="${cat.name}" loading="lazy" class="cg-img" draggable="false" />
-                <div class="cg-gradient"></div>
-                <div class="cg-content">
-                  <h3 class="cg-title">${cat.name}</h3>
-                  <p class="cg-desc">${cat.description}</p>
+          <div class="hl-rail" id="hl-rail">
+            ${productHighlights.map((h, i) => {
+              const catalog = data.catalogs.find(c => c.id === h.catalogId);
+              if (!catalog) return '';
+              return `
+              <article class="hl-card" data-highlight="${i}" style="--i:${i}" tabindex="0" role="button"
+                       aria-label="Open the ${catalog.name} catalog at ${h.label}">
+                <div class="hl-page">
+                  <img src="${h.image}" alt="${h.label} — page from the ${catalog.name} ${catalog.year} catalog" loading="lazy" />
+                  <div class="hl-veil">
+                    <span class="hl-open">
+                      Open in catalog
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            `;
-          }).join('')}
+                <div class="hl-info">
+                  <span class="hl-brand">${catalog.name}</span>
+                  <h3 class="hl-label">${h.label}</h3>
+                </div>
+              </article>`;
+            }).join('')}
+          </div>
+
+          <button class="hl-nav hl-nav--next" id="hl-next" aria-label="More products">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
       </div>
     </section>
@@ -355,7 +391,7 @@ export function homeView() {
             <div class="footer-links-col">
               <h4>Explore</h4>
               <a href="#catalogs">Catalogs</a>
-              <a href="#categories">Categories</a>
+              <a href="#categories">What We Carry</a>
               <a href="#featured">Promos and Specials</a>
               <a href="#" data-route="/products">Products</a>
             </div>
@@ -506,9 +542,10 @@ function initHeroButtons(container) {
       const brand = btn.dataset.brand;
       const catalogId = btn.dataset.catalog;
 
-      // Open a manufacturer catalog directly when one is wired up
+      // Open a manufacturer catalog directly when one is wired up.
+      // Hero CTAs pass a brand id here, so resolve either form.
       if (catalogId) {
-        const catalog = data.catalogs.find(c => c.id === catalogId);
+        const catalog = resolveCatalog(catalogId);
         if (catalog && (catalog.catalogUrl || catalog.pdfUrl)) {
           e.preventDefault();
           store.publish('openCatalog', catalog);
@@ -539,55 +576,56 @@ function initHeroButtons(container) {
 }
 
 // ── Category Interactive Gallery ──
+// ── Product Highlights ──
+// Each tile is a real catalog page; opening one deep-links the viewer to that page.
 function initCategoryGallery(container) {
-  const grid = container.querySelector('.category-gallery-grid');
-  let isDown = false;
-  let startX;
-  let scrollLeft;
+  const rail = container.querySelector('#hl-rail');
+  if (!rail) return;
 
-  if (grid) {
-    grid.addEventListener('mousedown', (e) => {
-      isDown = true;
-      grid.style.scrollSnapType = 'none'; // disable snap during drag
-      startX = e.pageX - grid.offsetLeft;
-      scrollLeft = grid.scrollLeft;
-    });
-    grid.addEventListener('mouseleave', () => {
-      isDown = false;
-      grid.style.scrollSnapType = ''; 
-    });
-    grid.addEventListener('mouseup', () => {
-      isDown = false;
-      grid.style.scrollSnapType = ''; 
-    });
-    grid.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - grid.offsetLeft;
-      const walk = (x - startX) * 2; 
-      grid.scrollLeft = scrollLeft - walk;
-    });
-    
-    // Touch support for grabbing
-    grid.addEventListener('touchstart', () => grid.style.scrollSnapType = 'none', {passive: true});
-    grid.addEventListener('touchend', () => grid.style.scrollSnapType = '', {passive: true});
-  }
+  const cards = [...rail.querySelectorAll('.hl-card')];
+  const prev = container.querySelector('#hl-prev');
+  const next = container.querySelector('#hl-next');
 
-  container.querySelectorAll('.category-gallery-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const categoryId = item.dataset.categoryId;
-      // Map channel category to product categories if needed, or just filter by channel
-      router.navigate('/products', { category: categoryId });
-    });
-    
-    // Keyboard support
-    item.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const categoryId = item.dataset.categoryId;
-        router.navigate('/products', { category: categoryId });
-      }
+  const open = (card) => {
+    const h = productHighlights[Number(card.dataset.highlight)];
+    const catalog = data.catalogs.find(c => c.id === h.catalogId);
+    if (!catalog) return;
+    // Hand the viewer a catalog pointed at this page rather than page one.
+    const url = catalogPageUrl(catalog, h.page);
+    store.publish('openCatalog', catalog.pdfUrl
+      ? { ...catalog, pdfUrl: url }
+      : { ...catalog, catalogUrl: url });
+  };
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => open(card));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(card); }
     });
   });
+
+  const step = () => {
+    const card = cards[0];
+    if (!card) return rail.clientWidth;
+    const gap = parseInt(getComputedStyle(rail).gap) || 20;
+    return (card.offsetWidth + gap) * 2;
+  };
+
+  // scroll-snap plus the rail's own inline padding parks scrollLeft a few px off
+  // zero at rest, so the end checks need a tolerance rather than an exact 0.
+  const EDGE_SLOP = 12;
+
+  const sync = () => {
+    const max = rail.scrollWidth - rail.clientWidth - EDGE_SLOP;
+    prev.disabled = rail.scrollLeft <= EDGE_SLOP;
+    next.disabled = rail.scrollLeft >= max;
+  };
+
+  prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+  rail.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
 }
 
 // ── Promos Tabs ──
@@ -617,62 +655,98 @@ function initPromosTabs(container) {
   });
 }
 
-// ── Catalog Gallery ──
+// ── Catalog Library ──
+const CATALOGS_PER_PAGE = 10;
+
 function initCatalogCarousel(container) {
-  const track = container.querySelector('#catalog-gallery-track');
-  const prevBtn = container.querySelector('#catalog-prev');
-  const nextBtn = container.querySelector('#catalog-next');
-  const cards = container.querySelectorAll('.catalog-gallery-card');
+  const grid = container.querySelector('#lib-grid');
+  if (!grid) return;
 
-  if (!track || !cards.length) return;
+  const cards = [...grid.querySelectorAll('.lib-card')];
+  const chips = [...container.querySelectorAll('.lib-chip')];
+  const range = container.querySelector('#lib-range');
+  const empty = container.querySelector('#lib-empty');
+  const pager = container.querySelector('#lib-pager');
+  const pagesEl = container.querySelector('#lib-pager-pages');
+  const prevBtn = container.querySelector('#lib-prev');
+  const nextBtn = container.querySelector('#lib-next');
+  const section = container.querySelector('#catalogs');
 
-  // Arrow scroll — scroll by one full card width + gap
-  function getScrollStep() {
-    const gap = parseInt(window.getComputedStyle(track).gap) || 20;
-    return cards[0].offsetWidth + gap;
+  let family = 'all';
+  let page = 1;
+
+  const matching = () => cards.filter(c => family === 'all' || c.dataset.family === family);
+
+  function render({ scroll = false } = {}) {
+    const list = matching();
+    const pageCount = Math.max(1, Math.ceil(list.length / CATALOGS_PER_PAGE));
+    page = Math.min(Math.max(1, page), pageCount);
+
+    const start = (page - 1) * CATALOGS_PER_PAGE;
+    const slice = list.slice(start, start + CATALOGS_PER_PAGE);
+
+    cards.forEach(c => { c.hidden = true; });
+    slice.forEach((c, i) => { c.hidden = false; c.style.setProperty('--i', i); });
+
+    if (range) {
+      range.textContent = list.length
+        ? `Showing ${start + 1}–${start + slice.length} of ${list.length}`
+        : 'No catalogs';
+    }
+    if (empty) empty.hidden = list.length > 0;
+
+    // A single page needs no pager
+    pager.hidden = pageCount <= 1;
+    pagesEl.innerHTML = Array.from({ length: pageCount }, (_, i) => {
+      const n = i + 1;
+      return `<button class="lib-page${n === page ? ' active' : ''}" data-page="${n}"
+                aria-label="Page ${n}" aria-current="${n === page}">${n}</button>`;
+    }).join('');
+    pagesEl.querySelectorAll('.lib-page').forEach(b => {
+      b.addEventListener('click', () => { page = Number(b.dataset.page); render({ scroll: true }); });
+    });
+
+    prevBtn.disabled = page === 1;
+    nextBtn.disabled = page === pageCount;
+
+    // Replay the stagger on the new set
+    grid.classList.remove('lib-grid--in');
+    void grid.offsetWidth;
+    grid.classList.add('lib-grid--in');
+
+    // Only pull the viewport back on an explicit page/filter change, never on first paint
+    if (scroll && section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  if (prevBtn) prevBtn.addEventListener('click', () => { track.scrollBy({ left: -getScrollStep(), behavior: 'smooth' }); });
-  if (nextBtn) nextBtn.addEventListener('click', () => { track.scrollBy({ left: getScrollStep(), behavior: 'smooth' }); });
+  const open = (card) => {
+    const catalog = data.catalogs.find(c => c.id === card.dataset.catalogId);
+    if (catalog && (catalog.catalogUrl || catalog.pdfUrl)) store.publish('openCatalog', catalog);
+  };
 
-  // Drag to scroll
-  let isDragging = false;
-  let startX = 0;
-  let scrollStart = 0;
-
-  track.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.pageX;
-    scrollStart = track.scrollLeft;
-    track.style.cursor = 'grabbing';
-    track.style.userSelect = 'none';
-  });
-
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const dx = e.pageX - startX;
-    track.scrollLeft = scrollStart - dx;
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      track.style.cursor = '';
-      track.style.userSelect = '';
-    }
-  });
-
-  // Card click to open catalog
   cards.forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (Math.abs(track.scrollLeft - scrollStart) > 5) return; // ignore drags
-      const catalogId = card.dataset.catalogId;
-      const catalog = data.catalogs.find(c => c.id === catalogId);
-      if (catalog && (catalog.catalogUrl || catalog.pdfUrl)) {
-        store.publish('openCatalog', catalog);
-      }
+    card.addEventListener('click', () => open(card));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(card); }
     });
   });
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      family = chip.dataset.family;
+      page = 1; // a new filter always starts at page 1
+      chips.forEach(c => {
+        const on = c === chip;
+        c.classList.toggle('active', on);
+        c.setAttribute('aria-selected', String(on));
+      });
+      render({ scroll: true });
+    });
+  });
+
+  prevBtn.addEventListener('click', () => { page--; render({ scroll: true }); });
+  nextBtn.addEventListener('click', () => { page++; render({ scroll: true }); });
+
+  render();
 }
 
 // ── Brand Card Clicks ──
@@ -726,7 +800,7 @@ function initScrollAnimations(container) {
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-  container.querySelectorAll('.section, .trust-item, .bento-card, .promo-card, .catalog-gallery-card, .vendor-logos-section, .about-grid').forEach(el => {
+  container.querySelectorAll('.section, .trust-item, .bento-card, .promo-card, .vendor-logos-section, .about-grid').forEach(el => {
     observer.observe(el);
   });
 }
@@ -769,7 +843,7 @@ function brandHomeView(brandId) {
     return container;
   }
 
-  const catalog = data.catalogs.find(c => c.id === brandId);
+  const catalog = primaryCatalogForBrand(brandId);
   const promo = data.promos.find(p => p.brandId === brandId);
   const products = data.products[brandId] || [];
   const bestSellers = products.filter(p => p.badge);
