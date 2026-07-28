@@ -11,12 +11,19 @@ import { groupByManufacturer, vendorSubtotal } from '@/lib/cart';
 
 export default function CheckoutClient({ manufacturerID, manufacturerName, profile }) {
   const router = useRouter();
-  const { cartItems, clearCart, loading } = useCart();
+  const { cartItems, clearCart, loading, liveByItemId, refreshLivePricing } = useCart();
   const [shipTos, setShipTos] = useState([]);
   const [shippingMethods, setShippingMethods] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState(null);
   const [completingOrder, setCompletingOrder] = useState(false);
+
+  useEffect(() => {
+    if (!cartItems.length) return;
+    void refreshLivePricing().catch((err) => {
+      console.warn('[checkout] live pricing refresh failed', err);
+    });
+  }, [cartItems.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const grouped = useMemo(() => groupByManufacturer(cartItems), [cartItems]);
   const vendorGroup = grouped[manufacturerID];
@@ -143,6 +150,7 @@ export default function CheckoutClient({ manufacturerID, manufacturerName, profi
             shipTos={shipTos}
             shippingMethods={shippingMethods}
             dataError={dataError}
+            liveByItemId={liveByItemId}
             onSuccess={handleSuccess}
           />
         </div>

@@ -89,6 +89,12 @@ a.cart-shop-btn {
   color: white;
 }
 
+/* White pill on orange banner — keep dark label visible */
+a.btn-promo,
+a.btn.btn-promo {
+  color: #222;
+}
+
 ::selection {
   background: rgba(241, 90, 36, 0.15);
   color: var(--text-primary);

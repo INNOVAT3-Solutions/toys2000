@@ -24,7 +24,15 @@ function clearIdempotencyKey(manufacturerID) {
   sessionStorage.removeItem(`checkout-idempotency-${manufacturerID}`);
 }
 
-export default function CheckoutForm({ group, customer, shipTos = [], shippingMethods = [], dataError, onSuccess }) {
+export default function CheckoutForm({
+  group,
+  customer,
+  shipTos = [],
+  shippingMethods = [],
+  dataError,
+  liveByItemId = {},
+  onSuccess,
+}) {
   const { manufacturerID, manufacturerName, items } = group;
 
   const [poNumber, setPoNumber] = useState('');
@@ -46,6 +54,22 @@ export default function CheckoutForm({ group, customer, shipTos = [], shippingMe
 
   const subtotal = vendorSubtotal(items);
   const belowMinimum = minimum > 0 && subtotal < minimum;
+  const liveIssues = items
+    .map((item) => {
+      const live = liveByItemId[String(item.item_id)];
+      if (!live || live.error) return null;
+      if (live.discontinued || live.isAvailable === false) {
+        return `${item.name}: unavailable from MarketTime`;
+      }
+      if (live.qtyAvailable != null && item.quantity > live.qtyAvailable) {
+        return live.qtyAvailable <= 0
+          ? `${item.name}: out of stock`
+          : `${item.name}: only ${live.qtyAvailable} available`;
+      }
+      return null;
+    })
+    .filter(Boolean);
+  const hasLiveIssue = liveIssues.length > 0;
 
   useEffect(() => {
     idempotencyKeyRef.current = getIdempotencyKey(manufacturerID);
@@ -80,6 +104,11 @@ export default function CheckoutForm({ group, customer, shipTos = [], shippingMe
 
     if (belowMinimum) {
       toast.error(`Order must be at least ${formatCurrency(minimum)} for ${manufacturerName}.`);
+      return;
+    }
+
+    if (hasLiveIssue) {
+      toast.error(liveIssues[0] || 'One or more items are unavailable in MarketTime.');
       return;
     }
 
@@ -168,6 +197,15 @@ export default function CheckoutForm({ group, customer, shipTos = [], shippingMe
         {belowMinimum && (
           <div className="mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 font-medium">
             Minimum order for {manufacturerName} is {formatCurrency(minimum)}. Add {formatCurrency(minimum - subtotal)} more to proceed.
+          </div>
+        )}
+
+        {hasLiveIssue && (
+          <div className="mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 font-medium space-y-1">
+            <p>Live MarketTime inventory/availability blocked checkout:</p>
+            {liveIssues.map((msg) => (
+              <p key={msg}>• {msg}</p>
+            ))}
           </div>
         )}
       </div>
@@ -327,7 +365,7 @@ export default function CheckoutForm({ group, customer, shipTos = [], shippingMe
       {/* Submit */}
       <button
         type="submit"
-        disabled={submitting || belowMinimum || (shipTos.length > 0 && !activeShipToID)}
+        disabled={submitting || belowMinimum || hasLiveIssue || (shipTos.length > 0 && !activeShipToID)}
         className="w-full py-3.5 rounded-xl font-bold text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
         style={{ background: 'linear-gradient(135deg, #f15a24, #ff7a4d)', fontFamily: "'Baloo 2', cursive", fontSize: '1rem' }}
       >

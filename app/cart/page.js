@@ -10,8 +10,31 @@ import VendorCheckoutTabs from '@/components/VendorCheckoutTabs';
 import { groupByManufacturer, vendorSubtotal, formatCurrency, snapQuantity } from '@/lib/cart';
 import { useManufacturerCheckoutInfos } from '@/lib/use-manufacturer-checkout-info';
 
+function getLiveIssue(item, liveByItemId) {
+  const live = liveByItemId?.[String(item.item_id)];
+  if (!live || live.error) return null;
+  if (live.discontinued || live.isAvailable === false) {
+    return 'Unavailable from MarketTime';
+  }
+  if (live.qtyAvailable != null && item.quantity > live.qtyAvailable) {
+    return live.qtyAvailable <= 0
+      ? 'Out of stock'
+      : `Only ${live.qtyAvailable} available`;
+  }
+  return null;
+}
+
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, clearCart, loading } = useCart();
+  const {
+    cartItems,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+    loading,
+    liveByItemId,
+    liveRefreshing,
+    refreshLivePricing,
+  } = useCart();
   const [activeManufacturerIds, setActiveManufacturerIds] = useState(null);
 
   useEffect(() => {
@@ -22,6 +45,13 @@ export default function CartPage() {
       })
       .catch(() => setActiveManufacturerIds(new Set()));
   }, []);
+
+  useEffect(() => {
+    if (!cartItems.length) return;
+    void refreshLivePricing().catch((err) => {
+      console.warn('[cart] live pricing refresh failed', err);
+    });
+  }, [cartItems.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const grouped = useMemo(() => groupByManufacturer(cartItems), [cartItems]);
   const vendorGroups = useMemo(
@@ -55,15 +85,17 @@ export default function CartPage() {
       ? activeManufacturerIds.has(group.manufacturerID)
       : true;
     const belowMin = minimum > 0 && subtotal < minimum;
+    const hasLiveIssue = group.items.some((item) => getLiveIssue(item, liveByItemId));
 
     return {
       manufacturerID: group.manufacturerID,
       manufacturerName: group.manufacturerName,
       subtotal,
       itemCount: group.items.reduce((sum, item) => sum + item.quantity, 0),
-      ready: isActiveVendor && !belowMin,
+      ready: isActiveVendor && !belowMin && !hasLiveIssue,
+      hasLiveIssue,
     };
-  }), [vendorGroups, checkoutInfoById, activeManufacturerIds]);
+  }), [vendorGroups, checkoutInfoById, activeManufacturerIds, liveByItemId]);
 
   const activeGroup = vendorGroups.find((group) => group.manufacturerID === activeVendorId)
     ?? vendorGroups[0]
@@ -105,10 +137,17 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-[#1a1d26]" style={{ fontFamily: "'Baloo 2', cursive" }}>
-            Your Cart
-          </h1>
+        <div className="flex items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[#1a1d26]" style={{ fontFamily: "'Baloo 2', cursive" }}>
+              Your Cart
+            </h1>
+            <p className="text-xs text-[#5f6980] mt-1">
+              {liveRefreshing
+                ? 'Refreshing live MarketTime prices & inventory…'
+                : 'Prices and stock verified against MarketTime'}
+            </p>
+          </div>
           <button
             onClick={() => clearCart()}
             className="text-sm text-[#5f6980] hover:text-red-500 transition-colors"
@@ -136,7 +175,8 @@ export default function CartPage() {
               const isActiveVendor = activeManufacturerIds
                 ? activeManufacturerIds.has(group.manufacturerID)
                 : true;
-              const checkoutDisabled = belowMin || !isActiveVendor;
+              const hasLiveIssue = group.items.some((item) => getLiveIssue(item, liveByItemId));
+              const checkoutDisabled = belowMin || !isActiveVendor || hasLiveIssue;
 
               return (
                 <div key={group.manufacturerID} className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden">
@@ -159,6 +199,8 @@ export default function CartPage() {
                       <CartRow
                         key={item.id}
                         item={item}
+                        live={liveByItemId[String(item.item_id)]}
+                        issue={getLiveIssue(item, liveByItemId)}
                         onUpdateQuantity={updateQuantity}
                         onRemove={removeFromCart}
                       />
@@ -176,6 +218,12 @@ export default function CartPage() {
                     {!isActiveVendor && (
                       <div className="px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-xs font-medium text-red-800">
                         {group.manufacturerName} is not available through Toys2000. Remove these items or shop an active brand.
+                      </div>
+                    )}
+
+                    {hasLiveIssue && (
+                      <div className="px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-xs font-medium text-red-800">
+                        One or more items are unavailable or over available stock in MarketTime. Update quantities before checkout.
                       </div>
                     )}
 
@@ -236,7 +284,8 @@ export default function CartPage() {
                   ? activeManufacturerIds.has(group.manufacturerID)
                   : true;
                 const belowMin = minimum > 0 && subtotal < minimum;
-                const canCheckout = isActiveVendor && !belowMin;
+                const hasLiveIssue = group.items.some((item) => getLiveIssue(item, liveByItemId));
+                const canCheckout = isActiveVendor && !belowMin && !hasLiveIssue;
                 const isActive = group.manufacturerID === activeGroup?.manufacturerID;
 
                 return (
@@ -284,7 +333,7 @@ export default function CartPage() {
   );
 }
 
-function CartRow({ item, onUpdateQuantity, onRemove }) {
+function CartRow({ item, live, issue, onUpdateQuantity, onRemove }) {
   const handleQtyChange = (delta) => {
     const next = item.quantity + delta * item.quantity_increment;
     if (next < item.minimum_quantity) {
@@ -293,6 +342,13 @@ function CartRow({ item, onUpdateQuantity, onRemove }) {
       onUpdateQuantity(item.id, snapQuantity(next, item.minimum_quantity, item.quantity_increment));
     }
   };
+
+  const stockLabel =
+    live?.qtyAvailable != null
+      ? `${live.qtyAvailable} in stock`
+      : live?.isAvailable === false
+        ? 'Unavailable'
+        : null;
 
   return (
     <div className="flex gap-4 px-5 py-4 items-start">
@@ -311,7 +367,13 @@ function CartRow({ item, onUpdateQuantity, onRemove }) {
         <Link href={`/product/${item.item_id}`} className="text-sm font-semibold text-[#1a1d26] hover:text-[#f15a24] line-clamp-2">
           {item.name}
         </Link>
-        <p className="text-xs text-[#5f6980] mt-0.5">{formatCurrency(item.unit_price)} each</p>
+        <p className="text-xs text-[#5f6980] mt-0.5">
+          {formatCurrency(item.unit_price)} each
+          {stockLabel ? ` · ${stockLabel}` : ''}
+        </p>
+        {issue && (
+          <p className="text-xs font-semibold text-red-600 mt-1">{issue}</p>
+        )}
         <div className="flex items-center gap-2 mt-2">
           <button onClick={() => handleQtyChange(-1)} className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-base font-medium hover:bg-[#f7f8fa]">−</button>
           <span className="text-sm font-bold w-8 text-center">{item.quantity}</span>

@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { toModifiedStartDateMs } from '../lib/markettime.js';
+import { toModifiedStartDateIso } from '../lib/markettime.js';
 
 const BASE_URL = 'https://publicapi.markettime.com/mtpublic/api/v1';
 const PAGE_SIZE = 250;
@@ -188,17 +188,25 @@ async function main() {
     console.log(`Manufacturers synced: ${manufacturersSynced}`);
 
     let offset = 0;
+    const sinceIso = modifiedStartDate && !isFull
+      ? toModifiedStartDateIso(modifiedStartDate)
+      : null;
+
     while (true) {
       const params = new URLSearchParams({
         offset: String(offset),
         recordSize: String(PAGE_SIZE),
       });
 
-      if (modifiedStartDate && !isFull) {
-        params.set('modifiedStartDate', String(toModifiedStartDateMs(modifiedStartDate)));
-      }
-
-      const response = await mtFetch(`/items?${params}`);
+      // GET ?modifiedStartDate= is broken on MT — use POST /items/get + dateModified
+      const response = sinceIso
+        ? await mtFetch(`/items/get?${params}`, {
+            method: 'POST',
+            body: JSON.stringify([
+              { field: 'dateModified', operator: 'gte', value: sinceIso },
+            ]),
+          })
+        : await mtFetch(`/items?${params}`);
       const records = Array.isArray(response) ? response : response?.records ?? [];
 
       if (records.length === 0) {

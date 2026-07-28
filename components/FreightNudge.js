@@ -1,6 +1,7 @@
 'use client';
 
 import { formatCurrency } from '@/lib/cart';
+import { isPromotionCurrentlyActive } from '@/lib/manufacturer-checkout';
 
 /**
  * Shows a free freight progress bar if the vendor has an active promotion.
@@ -12,12 +13,7 @@ import { formatCurrency } from '@/lib/cart';
 export default function FreightNudge({ promotions = [], subtotal = 0, manufacturerName }) {
   if (!promotions?.length) return null;
 
-  const now = new Date();
-
-  const activePromo = promotions.find((promo) => {
-    const end = promo.endDate ? new Date(promo.endDate) : null;
-    return !end || end > now;
-  });
+  const activePromo = promotions.find((promo) => isPromotionCurrentlyActive(promo));
 
   if (!activePromo) return null;
 

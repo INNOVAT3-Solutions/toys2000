@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { formatCurrency } from '@/lib/cart';
-import { partitionFreightPromotions } from '@/lib/manufacturer-checkout';
+import {
+  isPromotionCurrentlyActive,
+  partitionFreightPromotions,
+} from '@/lib/manufacturer-checkout';
 import FreightNudge from './FreightNudge';
 
 function MetPromotionCard({ promo }) {
@@ -50,10 +53,15 @@ export default function OrderPromotions({
   manufacturerName,
   mode = 'full',
 }) {
-  if (!promotions?.length) return null;
+  const activePromotions = useMemo(
+    () => (promotions ?? []).filter((promo) => isPromotionCurrentlyActive(promo)),
+    [promotions]
+  );
+
+  if (!activePromotions.length) return null;
 
   const { metFreight, missedFreight, otherPromos } = partitionFreightPromotions(
-    promotions,
+    activePromotions,
     subtotal
   );
 

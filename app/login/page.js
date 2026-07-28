@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createBrowserClient } from '@/lib/supabase';
@@ -16,7 +16,6 @@ export default function LoginPage() {
 }
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/catalog';
   const errorParam = searchParams.get('error');
@@ -33,24 +32,17 @@ function LoginForm() {
     if (modeParam === 'signup') setMode('signup');
   }, [modeParam]);
 
-  const linkMarketTimeProfile = async () => {
-    try {
-      const res = await fetch('/api/profile/link-markettime', { method: 'POST' });
-      const data = await res.json();
+  const safeRedirect =
+    redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/catalog';
 
-      if (data.linked && data.approved) {
-        toast.success('MarketTime account linked.');
-      } else if (data.linked && !data.approved) {
-        toast('MarketTime account found — pending Toys2000 approval.');
-      } else if (data.reason === 'not_found') {
-        toast('No MarketTime account found for this email. Register on MarketTime first, then try again.');
-      } else if (data.reason === 'api_error') {
-        // Non-fatal — catalog still works from Supabase
-        console.warn('MarketTime link skipped:', data.message);
-      }
-    } catch {
-      // Linking is best-effort; customers can still browse while pending.
-    }
+  // Best-effort; never block navigation — MarketTime link can take several seconds.
+  const linkMarketTimeProfile = () => {
+    void fetch('/api/profile/link-markettime', { method: 'POST' }).catch(() => {});
+  };
+
+  const goAfterAuth = (path) => {
+    // Full navigation so auth cookies are applied before the next page/proxy check.
+    window.location.assign(path);
   };
 
   const handleSubmit = async (e) => {
@@ -61,26 +53,25 @@ function LoginForm() {
       if (mode === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        await linkMarketTimeProfile();
         toast.success('Welcome back!');
-        router.push(redirect);
-        router.refresh();
-      } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
-        });
-        if (error) throw error;
-        if (data.session) {
-          await linkMarketTimeProfile();
-          toast.success('Portal account created.');
-          router.push('/pending-approval');
-          router.refresh();
-        } else {
-          toast.success('Check your email to confirm your portal account.');
-        }
+        linkMarketTimeProfile();
+        goAfterAuth(safeRedirect);
+        return;
       }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
+      });
+      if (error) throw error;
+      if (data.session) {
+        toast.success('Portal account created.');
+        linkMarketTimeProfile();
+        goAfterAuth('/pending-approval');
+        return;
+      }
+      toast.success('Check your email to confirm your portal account.');
     } catch (err) {
       toast.error(err.message || 'Something went wrong. Please try again.');
     } finally {

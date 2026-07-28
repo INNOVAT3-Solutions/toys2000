@@ -30,10 +30,52 @@ const APPROVAL_EXEMPT_PATHS = [
   '/api',
 ];
 
+function isPublicPath(pathname) {
+  return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
+}
+
+function isApprovalExempt(pathname) {
+  return APPROVAL_EXEMPT_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
+}
+
+/** True when the request likely has a Supabase session cookie. */
+function hasSupabaseAuthCookie(req) {
+  return req.cookies.getAll().some((cookie) => {
+    const name = cookie.name;
+    return (
+      name.includes('-auth-token') ||
+      (name.startsWith('sb-') && name.includes('auth'))
+    );
+  });
+}
+
+function isAuthRateLimited(error) {
+  if (!error) return false;
+  return (
+    error.status === 429 ||
+    error.code === 'over_request_rate_limit' ||
+    /rate limit/i.test(error.message ?? '')
+  );
+}
+
 export async function proxy(req) {
   const res = NextResponse.next({
     request: { headers: req.headers },
   });
+
+  const pathname = req.nextUrl.pathname;
+  const publicPath = isPublicPath(pathname);
+  const hasSessionCookie = hasSupabaseAuthCookie(req);
+
+  // Fast path: no auth cookie → never call Supabase Auth (avoids 429 storms).
+  if (!hasSessionCookie) {
+    if (!publicPath) {
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    return res;
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -55,42 +97,32 @@ export async function proxy(req) {
     }
   );
 
-  // IMPORTANT: use getUser() rather than getSession(). getSession() reads the JWT
-  // from cookies without validating it against the auth server, so a tampered or
-  // stale cookie can satisfy the auth check. getUser() round-trips to Supabase
-  // and is the only safe primitive to use in server-side auth gates.
-  // See: https://supabase.com/docs/guides/auth/server-side/nextjs
-  const { data: { user } } = await supabase.auth.getUser();
+  // Validate/refresh session only when a cookie is present.
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-  const pathname = req.nextUrl.pathname;
-  const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
+  // If Auth is rate-limited, do not redirect-loop (that makes 429 worse).
+  if (isAuthRateLimited(error)) {
+    console.warn('[proxy] Supabase auth rate limited — passing request through');
+    return res;
+  }
 
-  if (!user && !isPublic) {
+  if (!user && !publicPath) {
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Enforce the "approved retailer" business rule at the edge. Without this,
-  // anyone who signs up can browse the catalog before Jimmy reviews them in MT.
-  // The catalog/cart/checkout RLS policies also enforce this server-side, but
-  // redirecting at the proxy avoids leaking page shells and 401 noise.
-  if (user) {
-    const isExempt = APPROVAL_EXEMPT_PATHS.some(
-      (p) => pathname === p || pathname.startsWith(p + '/')
-    );
+  // Enforce approved-retailer gate for signed-in users on non-exempt routes.
+  if (user && !isApprovalExempt(pathname)) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('approved')
+      .eq('id', user.id)
+      .maybeSingle();
 
-    if (!isExempt) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('approved')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (!profile?.approved) {
-        const pendingUrl = new URL('/pending-approval', req.url);
-        return NextResponse.redirect(pendingUrl);
-      }
+    if (!profile?.approved) {
+      const pendingUrl = new URL('/pending-approval', req.url);
+      return NextResponse.redirect(pendingUrl);
     }
   }
 

@@ -632,12 +632,12 @@ export default function JuanHome() {
               <h2>{signupBanner.title}</h2>
               <p>{signupBanner.subtitle}</p>
               {signupLink.startsWith('http') ? (
-                <a href={signupLink} className="btn btn-promo" target="_blank" rel="noopener noreferrer">
-                  {signupBanner.cta}
+                <a href={signupLink} className="btn-promo" target="_blank" rel="noopener noreferrer">
+                  {signupBanner.cta || 'Sign Up Today'}
                 </a>
               ) : (
-                <Link href={signupLink} className="btn btn-promo">
-                  {signupBanner.cta}
+                <Link href={signupLink} className="btn-promo">
+                  {signupBanner.cta || 'Sign Up Today'}
                 </Link>
               )}
             </div>
