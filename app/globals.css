@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+/* ================================================================
+   BRAND THEME — CSS custom properties used by app/styles/*.css
+   These mirror the variables defined in the toys2000 design system
+   so the imported component CSS files resolve correctly.
+   ================================================================ */
+:root {
+  /* Brand palette */
+  --primary-color: #f15a24;
+  --secondary-color: #00aeef;
+  --accent-color: #8cc63f;
+  --warning-color: #ffb600;
+
+  /* Surfaces */
+  --bg-color: #ffffff;
+  --bg-surface: #f7f8fa;
+  --bg-surface-alt: #eef0f4;
+
+  /* Text */
+  --text-primary: #1a1d26;
+  --text-secondary: #5f6980;
+
+  /* Fonts */
+  --font-brand: 'Baloo 2', cursive, sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --font-ui: 'Inter', sans-serif;
+  --font-accent: 'Pacifico', cursive;
+
+  /* Shared tokens */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Tailwind theme overrides ─────────────────────────────────── */
+@theme inline {
+  --color-primary: #f15a24;
+  --color-primary-light: #ff7a4d;
+  --color-secondary: #00aeef;
+  --color-secondary-light: #33c1ff;
+  --color-accent: #8cc63f;
+  --color-warning: #ffb600;
+  --color-surface: #f7f8fa;
+  --color-surface-alt: #eef0f4;
+  --color-text-primary: #1a1d26;
+  --color-text-secondary: #5f6980;
+}
+
+/* ── Base reset ─────────────────────────────────────────────────
+   Do NOT zero margin/padding on * — that strips Tailwind utility
+   classes (px-4, py-8, gap-*, etc.) and breaks page layouts.
+   ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-brand);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Button-styled links must keep white text — do not inherit link blue */
+a.btn,
+a.btn-primary,
+a.btn-secondary,
+a.btn-outline,
+a.btn-hero-primary,
+a.btn-hero-secondary,
+a.nav-quote-btn,
+a.cart-checkout-btn,
+a.cart-vendor-checkout-btn,
+a.cart-shop-btn {
+  color: white;
+}
+
+::selection {
+  background: rgba(241, 90, 36, 0.15);
+  color: var(--text-primary);
+}
+
+/* ── Shared utilities ─────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-brand);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 8px;
+  padding: 12px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), #ff7a4d);
+  color: white;
+  box-shadow: 0 4px 12px rgba(241, 90, 36, 0.25);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(241, 90, 36, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--secondary-color), #33c1ff);
+  color: white;
+}
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 174, 239, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+}
+.btn-outline:hover {
+  background: var(--bg-surface);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.glass-panel {
+  background: white;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+/* ── Animations ───────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeIn 0.5s ease forwards; }
+
+.page-exit { opacity: 0; transform: translateY(8px); }
+.page-enter { opacity: 0; transform: translateY(8px); }
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* ── Component CSS from toys2000 design system ──────────────────
+   Order matters: components → home → products → modals → checkout
+   ─────────────────────────────────────────────────────────────── */
+@import './styles/components.css';
+@import './styles/home.css';
+@import './styles/products.css';
+@import './styles/modals.css';
+@import './styles/checkout.css';
+
+/* Product cards should be visible immediately — scroll animation is optional */
+.product-card { opacity: 1; transform: none; }
+
+/* Show mobile menu button below 1024px (matches components.css breakpoint) */
+@media (max-width: 1024px) {
+  :root { --show-mobile-menu: flex; }
+  .nav-group-left .nav-links { display: none; }
+}

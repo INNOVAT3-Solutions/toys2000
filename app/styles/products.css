@@ -1,0 +1,421 @@
+/* ================================================================
+   PRODUCTS PAGE STYLES
+   ================================================================ */
+
+.products-page {
+  padding-top: 130px;
+  min-height: 100vh;
+  background-color: var(--bg-surface);
+}
+
+.products-layout-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+}
+
+/* Header */
+.products-header {
+  margin-bottom: 24px;
+}
+
+.products-breadcrumb {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.products-breadcrumb a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.products-breadcrumb a:hover {
+  color: var(--primary-color);
+}
+
+.products-title {
+  font-family: var(--font-brand);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.products-meta {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* ================================================================
+   HORIZONTAL FILTER BAR
+   ================================================================ */
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: white;
+  border-radius: 16px;
+  padding: 12px 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--card-shadow);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Search inside filter bar */
+.filter-bar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  min-width: 180px;
+  transition: all 0.25s ease;
+}
+
+.filter-bar-search:focus-within {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1);
+}
+
+.filter-bar-search svg {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.filter-bar-search input {
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  outline: none;
+  width: 100%;
+}
+
+.filter-bar-search input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Clear All button */
+.filter-clear-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-clear-btn:hover {
+  background: rgba(241, 90, 36, 0.08);
+}
+
+/* ================================================================
+   FILTER DROPDOWNS
+   ================================================================ */
+
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-dropdown-btn:hover {
+  border-color: var(--secondary-color);
+  background: white;
+}
+
+.filter-dropdown.open .filter-dropdown-btn {
+  border-color: var(--secondary-color);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1);
+}
+
+.filter-chevron {
+  transition: transform 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.filter-dropdown.open .filter-chevron {
+  transform: rotate(180deg);
+}
+
+/* Badge count on button */
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  padding: 0 5px;
+  line-height: 1;
+}
+
+/* Dropdown panel */
+.filter-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  background: white;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  display: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.filter-dropdown.open .filter-dropdown-panel {
+  display: block;
+  animation: filterDropdownIn 0.18s ease-out;
+}
+
+@keyframes filterDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar for panel */
+.filter-dropdown-panel::-webkit-scrollbar {
+  width: 4px;
+}
+.filter-dropdown-panel::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 4px;
+}
+
+/* Dropdown option row */
+.filter-dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.filter-dropdown-option:hover {
+  background: var(--bg-surface);
+}
+
+.filter-dropdown-option input[type="checkbox"],
+.filter-dropdown-option input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.filter-dropdown-label {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  flex: 1;
+  text-transform: capitalize;
+}
+
+.filter-dropdown-count {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  background: var(--bg-surface-alt);
+  padding: 2px 7px;
+  border-radius: 8px;
+  min-width: 22px;
+  text-align: center;
+}
+
+/* ================================================================
+   ACTIVE FILTER TAGS
+   ================================================================ */
+
+.filter-active-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(241, 90, 36, 0.08);
+  color: var(--primary-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+}
+
+.filter-tag:hover {
+  background: rgba(241, 90, 36, 0.16);
+}
+
+.filter-tag svg {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.filter-tag:hover svg {
+  opacity: 1;
+}
+
+/* ================================================================
+   PRODUCTS GRID
+   ================================================================ */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.product-brand-tag {
+  font-family: var(--font-brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+/* Empty State */
+.products-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 20px;
+  border: 1px dashed var(--glass-border);
+}
+
+.products-empty svg {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.products-empty h3 {
+  font-family: var(--font-brand);
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.products-empty p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 1024px) {
+  .products-layout-container {
+    padding: 0 20px 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-bar {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .filter-bar-left {
+    gap: 6px;
+  }
+
+  .filter-bar-search {
+    min-width: 140px;
+    flex: 1 1 100%;
+  }
+
+  .filter-dropdown-btn {
+    padding: 7px 10px;
+    font-size: 0.82rem;
+  }
+
+  .filter-dropdown-panel {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .products-title {
+    font-size: 1.8rem;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .filter-bar-search {
+    min-width: 100%;
+  }
+
+  .filter-dropdown-panel {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 0;
+    min-width: auto;
+    max-height: 50vh;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+  }
+}

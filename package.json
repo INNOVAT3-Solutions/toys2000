@@ -1,14 +1,31 @@
 {
-  "name": "toys-2000",
-  "version": "0.0.0",
+  "name": "toys2000",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "sync:mt": "node --env-file=.env scripts/sync-markettime.js",
+    "sync:customers": "node --env-file=.env scripts/sync-markettime-customers.js",
+    "verify:mt": "node --env-file=.env scripts/verify-mt-key.js",
+    "test:resend": "node --env-file=.env scripts/test-resend.js",
+    "monitor:mt": "node --env-file=.env scripts/monitor-mt-key.js",
+    "approve:customers": "node --env-file=.env scripts/approve-customers.js",
+    "assign:customers": "node --env-file=.env scripts/assign-customer-salesperson.js"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.1",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hot-toast": "^2.6.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "vite": "^5.4.1"
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4"
   }
 }
