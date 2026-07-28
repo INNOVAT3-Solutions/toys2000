@@ -263,49 +263,6 @@ body:not(.has-hero-nav) .nav-master-logo-img {
   transform: translateY(-1px);
 }
 
-.nav-profile-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00aeef 0%, #0090c8 100%);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.nav-profile-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 174, 239, 0.35);
-}
-
-.nav-profile-btn-active {
-  box-shadow: 0 0 0 2px white, 0 0 0 4px #00aeef;
-}
-
-.nav-profile-initials {
-  font-family: var(--font-brand);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
-
-body.has-hero-nav .navbar:not(.navbar-scrolled) .nav-profile-btn {
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
-}
-
-body.has-hero-nav .navbar:not(.navbar-scrolled) .nav-profile-btn-active {
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 4px #00aeef;
-}
-
 .cart-badge {
   position: absolute;
   top: -4px;

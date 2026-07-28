@@ -7,8 +7,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { createBrowserClient } from '@/lib/supabase';
 import toast from 'react-hot-toast';
 
-// Only the home page has a full-bleed hero under the navbar.
-const HERO_PATHS = ['/'];
+// Full-bleed hero under the transparent navbar
+const HERO_PATHS = ['/', '/brands'];
 
 export default function Navbar({ cartCount = 0, onCartOpen }) {
   const [scrolled, setScrolled] = useState(false);
@@ -22,7 +22,8 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
     (p) => pathname === p || pathname.startsWith(p + '/')
   );
 
-  // Toggle body.has-hero-nav so the transparent-navbar CSS rule fires
+  const orderNowHref = user ? '/catalog' : '/login?redirect=/catalog';
+
   useEffect(() => {
     if (isHeroPage) {
       document.body.classList.add('has-hero-nav');
@@ -64,25 +65,34 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
     : '?';
   const isProfilePage = pathname === '/profile' || pathname.startsWith('/profile/');
 
+  const scrollToId = (id) => (e) => {
+    if (pathname !== '/') return;
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setMobileOpen(false);
+  };
+
   return (
     <>
       <nav className={`navbar${scrolled ? ' navbar-scrolled' : ''}`}>
         <div className="nav-row">
 
-          {/* ── Left nav links ── */}
           <div className="nav-group nav-group-left">
             <div className="nav-links">
+              <Link href="/#catalogs" className="nav-link" onClick={scrollToId('catalogs')}>
+                Catalogs
+              </Link>
               <Link href="/catalog" className="nav-link">Shop All</Link>
               <Link href="/catalog/brands" className="nav-link">Brands</Link>
+              <Link href="/#featured" className="nav-link" onClick={scrollToId('featured')}>
+                Promos
+              </Link>
               {user && (
-                <>
-                  <Link href="/orders" className="nav-link">My Orders</Link>
-                </>
+                <Link href="/orders" className="nav-link">My Orders</Link>
               )}
             </div>
           </div>
 
-          {/* ── Center logo — overflows the navbar ── */}
           <div className="nav-center">
             <Link href="/" className="nav-master-logo" aria-label="Toys2000 home">
               <Image
@@ -97,11 +107,16 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
             </Link>
           </div>
 
-          {/* ── Right actions ── */}
           <div className="nav-group nav-group-right">
             {user ? (
               <>
-                {/* Cart */}
+                <Link href={orderNowHref} className="nav-quote-btn">
+                  Order Now
+                  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
+
                 <button
                   onClick={onCartOpen}
                   className="nav-cart-btn"
@@ -124,7 +139,6 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
                   <span className="nav-profile-initials">{profileInitials}</span>
                 </Link>
 
-                {/* Sign out */}
                 <button
                   onClick={handleSignOut}
                   className="nav-link"
@@ -134,15 +148,19 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
                 </button>
               </>
             ) : (
-              <Link href="/login" className="nav-quote-btn">
-                Sign in
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
+              <>
+                <Link href="/login" className="nav-link">
+                  Sign In
+                </Link>
+                <Link href={orderNowHref} className="nav-quote-btn">
+                  Order Now
+                  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </>
             )}
 
-            {/* Mobile hamburger */}
             <button
               className="nav-cart-btn"
               onClick={() => setMobileOpen((o) => !o)}
@@ -158,7 +176,6 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {mobileOpen && (
           <div
             style={{
@@ -170,30 +187,39 @@ export default function Navbar({ cartCount = 0, onCartOpen }) {
               gap: '12px',
             }}
           >
+            <Link href="/#catalogs" className="nav-link" style={{ padding: '8px 0' }} onClick={scrollToId('catalogs')}>
+              Catalogs
+            </Link>
             <Link href="/catalog" className="nav-link" style={{ padding: '8px 0' }}>Shop All</Link>
             <Link href="/catalog/brands" className="nav-link" style={{ padding: '8px 0' }}>Brands</Link>
+            <Link href="/#featured" className="nav-link" style={{ padding: '8px 0' }} onClick={scrollToId('featured')}>
+              Promos
+            </Link>
             {user && (
               <>
                 <Link href="/orders" className="nav-link" style={{ padding: '8px 0' }}>My Orders</Link>
                 <Link href="/profile" className="nav-link" style={{ padding: '8px 0' }}>Profile</Link>
               </>
             )}
-            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--glass-border)' }}>
-              {user ? (
+            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {!user && (
+                <Link href="/login" className="nav-link" style={{ padding: '8px 0' }}>
+                  Sign In
+                </Link>
+              )}
+              <Link href={orderNowHref} className="nav-quote-btn" style={{ width: '100%', justifyContent: 'center' }}>
+                Order Now
+              </Link>
+              {user && (
                 <button onClick={handleSignOut} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px 0' }}>
                   Sign out
                 </button>
-              ) : (
-                <Link href="/login" className="nav-quote-btn" style={{ width: '100%', justifyContent: 'center' }}>
-                  Sign in
-                </Link>
               )}
             </div>
           </div>
         )}
       </nav>
 
-      {/* Spacer — only for non-hero pages (hero pages intentionally go under the navbar) */}
       {!isHeroPage && <div style={{ height: '96px' }} />}
     </>
   );

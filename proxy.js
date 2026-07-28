@@ -2,10 +2,33 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 
 // Pages reachable without signing in.
-const PUBLIC_PATHS = ['/', '/login', '/register', '/catalog', '/product', '/api'];
+const PUBLIC_PATHS = [
+  '/',
+  '/login',
+  '/register',
+  '/catalog',
+  '/product',
+  '/brands',
+  '/privacy',
+  '/terms',
+  '/api',
+];
 
 // Pages an authenticated-but-unapproved user may view (includes public catalog browsing).
-const APPROVAL_EXEMPT_PATHS = ['/', '/login', '/register', '/pending-approval', '/reset-password', '/catalog', '/product', '/profile', '/api'];
+const APPROVAL_EXEMPT_PATHS = [
+  '/',
+  '/login',
+  '/register',
+  '/pending-approval',
+  '/reset-password',
+  '/catalog',
+  '/product',
+  '/brands',
+  '/privacy',
+  '/terms',
+  '/profile',
+  '/api',
+];
 
 export async function proxy(req) {
   const res = NextResponse.next({
@@ -75,14 +98,14 @@ export async function proxy(req) {
 }
 
 export const matcher = [
-  '/((?!_next/static|_next/image|favicon.ico|logos|brands|catalogs|categories|icons.svg).*)',
+  '/((?!_next/static|_next/image|favicon.ico|logos|brands|catalogs|catalog-covers|catalog-pages|categories|hero|brand-videos|icons.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|mp4)$).*)',
 ];
 
 export const config = {
   matcher: [
     /*
-     * Match all paths except Next.js internals and static files.
+     * Match all paths except Next.js internals and static marketing assets.
      */
-    '/((?!_next/static|_next/image|favicon.ico|logos|brands|catalogs|categories|icons.svg).*)',
+    '/((?!_next/static|_next/image|favicon.ico|logos|brands|catalogs|catalog-covers|catalog-pages|categories|hero|brand-videos|icons.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|mp4)$).*)',
   ],
 };
