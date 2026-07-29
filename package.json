@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "dev:stable": "NODE_OPTIONS=--max-old-space-size=8192 next dev",
+    "dev:webpack": "NODE_OPTIONS=--max-old-space-size=8192 next dev --webpack",
     "build": "next build",
     "start": "next start",
     "sync:mt": "node --env-file=.env scripts/sync-markettime.js",

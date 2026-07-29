@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 /**
  * Full-screen catalog viewer for Flipsnack embeds or local PDFs.
@@ -9,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 export default function CatalogViewer({ catalog, onClose }) {
   const [loaded, setLoaded] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const timeoutRef = useRef(null);
 
   const isFlipsnack = !!catalog?.catalogUrl;
@@ -16,10 +18,13 @@ export default function CatalogViewer({ catalog, onClose }) {
   const src = isFlipsnack ? catalog.catalogUrl : catalog?.pdfUrl;
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     setLoaded(false);
     setTimedOut(false);
 
-    // 6 second timeout — Flipsnack iframes don't fire load events reliably
     if (isFlipsnack) {
       timeoutRef.current = setTimeout(() => setTimedOut(true), 6000);
     }
@@ -30,14 +35,20 @@ export default function CatalogViewer({ catalog, onClose }) {
   }, [catalog, isFlipsnack]);
 
   useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [onClose]);
 
   useEffect(() => {
+    document.body.classList.add('catalog-viewer-open');
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.classList.remove('catalog-viewer-open');
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const handleLoad = () => {
@@ -45,64 +56,60 @@ export default function CatalogViewer({ catalog, onClose }) {
     clearTimeout(timeoutRef.current);
   };
 
-  return (
-    <>
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm" onClick={onClose} />
-      <div className="fixed inset-4 z-50 rounded-2xl overflow-hidden bg-white flex flex-col shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-black/[0.06] bg-white">
-          <h2 className="font-bold text-[#1a1d26]" style={{ fontFamily: "'Baloo 2', cursive" }}>
-            {catalog?.name || 'Catalog'}
-          </h2>
-          <div className="flex items-center gap-3">
-            {isPdf && (
-              <a
-                href={catalog.pdfUrl}
-                download
-                className="text-sm font-semibold text-[#00aeef] hover:underline"
-              >
-                Download PDF
-              </a>
-            )}
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-[#5f6980] hover:bg-[#f7f8fa] transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
+  if (!catalog || !mounted) return null;
 
-        {/* Viewer */}
-        <div className="flex-1 relative">
+  return createPortal(
+    <div className="catalog-viewer-root" role="dialog" aria-modal="true" aria-label={catalog?.name || 'Catalog'}>
+      <button
+        type="button"
+        className="catalog-viewer-backdrop"
+        onClick={onClose}
+        aria-label="Close catalog"
+      />
+
+      <div className="catalog-viewer-panel">
+        <header className="catalog-viewer-toolbar">
+          <button type="button" className="catalog-viewer-close" onClick={onClose}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Close catalog
+          </button>
+
+          <p className="catalog-viewer-title">{catalog?.name || 'Catalog'}</p>
+
+          <p className="catalog-viewer-hint">Press Esc or click outside</p>
+
+          {isPdf && (
+            <a href={catalog.pdfUrl} download className="catalog-viewer-download">
+              Download PDF
+            </a>
+          )}
+        </header>
+
+        <div className="catalog-viewer-body">
           {!loaded && !timedOut && (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#f7f8fa]">
-              <div className="flex flex-col items-center gap-3 text-[#5f6980]">
-                <div className="w-8 h-8 border-2 border-[#f15a24] border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm">Loading catalog…</p>
-              </div>
+            <div className="catalog-viewer-loading">
+              <div className="catalog-viewer-spinner" />
+              <p>Loading catalog…</p>
             </div>
           )}
 
           {timedOut && !loaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#f7f8fa]">
-              <div className="text-center space-y-3">
-                <p className="text-[#5f6980] text-sm">The catalog is taking longer than expected.</p>
-                {isPdf && (
-                  <a href={catalog.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-[#00aeef] hover:underline">
-                    Open PDF in new tab
-                  </a>
-                )}
-              </div>
+            <div className="catalog-viewer-loading">
+              <p>The catalog is taking longer than expected.</p>
+              {isPdf && (
+                <a href={catalog.pdfUrl} target="_blank" rel="noopener noreferrer">
+                  Open PDF in new tab
+                </a>
+              )}
             </div>
           )}
 
           {src && (
             <iframe
               src={src}
-              className="w-full h-full border-0"
+              className="catalog-viewer-frame"
               onLoad={handleLoad}
               allow="fullscreen"
               title={catalog?.name || 'Catalog'}
@@ -110,6 +117,7 @@ export default function CatalogViewer({ catalog, onClose }) {
           )}
         </div>
       </div>
-    </>
+    </div>,
+    document.body
   );
 }

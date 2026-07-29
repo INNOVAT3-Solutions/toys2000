@@ -3,10 +3,10 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import CatalogViewer from '@/components/CatalogViewer';
-import { brands, catalogsForBrand, primaryCatalogForBrand } from '@/lib/marketing-data';
+import { brands, catalogsForBrand, catalogProductsHref, primaryCatalogForBrand } from '@/lib/marketing-data';
 
 function catalogShopHref(brandId) {
-  return `/catalog?brand=${encodeURIComponent(brandId)}`;
+  return catalogProductsHref(brandId);
 }
 
 export default function BrandPage({ brand }) {

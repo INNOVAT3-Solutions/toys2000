@@ -4,18 +4,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import CatalogViewer from '@/components/CatalogViewer';
+import PromosSection from '@/components/marketing/PromosSection';
 import {
   brands,
   catalogs,
   catalogFamilies,
   catalogPageUrl,
+  catalogProductsHref,
   familyIdFor,
   heroSlides,
   productHighlights,
   promoBanners,
   resolveCatalog,
 } from '@/lib/marketing-data';
-import { buildPromoGroups } from './promo-groups';
 
 const SLIDE_DURATION = 6000;
 const CATALOGS_PER_PAGE = 10;
@@ -36,7 +37,7 @@ function renderHeadline(slide) {
 }
 
 function catalogHref(brandId) {
-  return brandId ? `/catalog?brand=${encodeURIComponent(brandId)}` : '/catalog';
+  return catalogProductsHref(brandId);
 }
 
 function HeroCta({ cta, variant, onOpenCatalog, onAnchorClick }) {
@@ -75,7 +76,7 @@ function HeroCta({ cta, variant, onOpenCatalog, onAnchorClick }) {
   }
 
   const href =
-    cta.link?.startsWith('/brands/') ? cta.link :
+    cta.link?.startsWith('/brands/') ? catalogProductsHref(cta.link.replace('/brands/', '')) :
     cta.brand ? catalogHref(cta.brand) :
     cta.link || '/catalog';
 
@@ -91,12 +92,10 @@ export default function JuanHome() {
     () => catalogs.filter((c) => c.catalogUrl || c.pdfUrl),
     []
   );
-  const promoGroups = useMemo(() => buildPromoGroups(), []);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const [viewerCatalog, setViewerCatalog] = useState(null);
-  const [promoTab, setPromoTab] = useState(promoGroups[0]?.id || 'spring');
   const [catalogFamily, setCatalogFamily] = useState('all');
   const [catalogPage, setCatalogPage] = useState(1);
   const [gridAnimate, setGridAnimate] = useState(true);
@@ -270,18 +269,6 @@ export default function JuanHome() {
         onTouchStart={handleHeroTouchStart}
         onTouchEnd={handleHeroTouchEnd}
       >
-        <video
-          className="hero-video-bg"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          onError={(e) => { e.currentTarget.style.display = 'none'; }}
-        >
-          <source src="/brand-videos/toys-2000.mp4" type="video/mp4" />
-        </video>
-
         {heroSlides.map((slide, i) => (
           <div
             key={slide.id}
@@ -650,77 +637,7 @@ export default function JuanHome() {
           </div>
         </section>
 
-        <section className="section promos-section" id="featured">
-          <div className="section-container">
-            <div className="section-header section-header-center">
-              <div>
-                <h2 className="section-title">
-                  Promos <span className="promo-and-sign">&</span> Specials
-                </h2>
-                <p className="section-subtitle">
-                  Current deals and wholesale pricing from our manufacturers
-                </p>
-              </div>
-            </div>
-
-            <div className="promo-tabs">
-              {promoGroups.map((g) => (
-                <button
-                  key={g.id}
-                  type="button"
-                  className={`promo-tab ${promoTab === g.id ? 'active' : ''}`}
-                  data-group={g.id}
-                  onClick={() => {
-                    setPromoTab(g.id);
-                    document.querySelector(`[data-group="${g.id}"]`)?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'nearest',
-                      inline: 'center',
-                    });
-                  }}
-                >
-                  {g.icon}
-                  {g.label}
-                  <span className="promo-tab-count">{g.deals.length}</span>
-                </button>
-              ))}
-            </div>
-
-            {promoGroups.map((g) => (
-              <div
-                key={g.id}
-                className={`promo-group ${promoTab === g.id ? 'active' : ''}`}
-                data-group={g.id}
-              >
-                <div className="promo-cards">
-                  {g.deals.map((deal) => (
-                    <div key={`${deal.title}-${deal.brand}`} className="promo-card">
-                      <div className="promo-card-left">
-                        <div className="promo-card-brand-row">
-                          {deal.brandLogo && (
-                            <img src={deal.brandLogo} alt={deal.brand} className="promo-card-logo" />
-                          )}
-                          <span className="promo-card-brand">{deal.brand}</span>
-                          {deal.badge && <span className="promo-card-badge">{deal.badge}</span>}
-                        </div>
-                        <h4 className="promo-card-title">{deal.title}</h4>
-                        <p className="promo-card-desc">{deal.description}</p>
-                        <span className="promo-card-dates">{deal.dates}</span>
-                      </div>
-                      <div className="promo-card-right">
-                        <div className="promo-card-discount">{deal.discount}</div>
-                        <div className="promo-card-spend">on {deal.spend}</div>
-                        <Link href="/register" className="btn btn-primary promo-card-cta">
-                          Get This Deal
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <PromosSection />
 
         <section className="section brands-section" id="brands">
           <div className="section-container">
@@ -740,7 +657,7 @@ export default function JuanHome() {
               {[...brands, ...brands].map((brand, i) => (
                 <Link
                   key={`${brand.id}-${i}`}
-                  href={`/brands/${brand.id}`}
+                  href={catalogProductsHref(brand.id)}
                   className="mfr-ticker-item"
                   data-brand={brand.id}
                   aria-hidden={i >= brands.length ? true : undefined}

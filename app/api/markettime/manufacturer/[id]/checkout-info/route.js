@@ -3,7 +3,7 @@ import { getManufacturer, getManufacturerPromotions } from '@/lib/markettime';
 import {
   getManufacturerMinimum,
   getManufacturerReorderMinimum,
-  normalizePromotions,
+  normalizePromotionsForManufacturer,
 } from '@/lib/manufacturer-checkout';
 import { marketTimeErrorResponse } from '@/lib/markettime-errors';
 import { NextResponse } from 'next/server';
@@ -20,7 +20,7 @@ export async function GET(request, { params }) {
       getManufacturerPromotions(id),
     ]);
 
-    const promotions = normalizePromotions(promotionsResponse);
+    const promotions = normalizePromotionsForManufacturer(promotionsResponse, id);
 
     return NextResponse.json({
       manufacturerID: id,

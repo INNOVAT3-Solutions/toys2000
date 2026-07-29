@@ -58,6 +58,23 @@ function isAuthRateLimited(error) {
   );
 }
 
+/** Transient network / fetch failure talking to Supabase Auth (status 0). */
+function isAuthUnreachable(error) {
+  if (!error) return false;
+  return (
+    error.status === 0 ||
+    error.name === 'AuthRetryableFetchError' ||
+    /fetch failed/i.test(error.message ?? '')
+  );
+}
+
+function hasSupabaseConfig() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
+
 export async function proxy(req) {
   const res = NextResponse.next({
     request: { headers: req.headers },
@@ -67,6 +84,15 @@ export async function proxy(req) {
   const publicPath = isPublicPath(pathname);
   const hasSessionCookie = hasSupabaseAuthCookie(req);
 
+  if (!hasSupabaseConfig()) {
+    if (!publicPath) {
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    return res;
+  }
+
   // Fast path: no auth cookie → never call Supabase Auth (avoids 429 storms).
   if (!hasSessionCookie) {
     if (!publicPath) {
@@ -74,6 +100,11 @@ export async function proxy(req) {
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
+    return res;
+  }
+
+  // Public pages do not need session validation in middleware.
+  if (publicPath) {
     return res;
   }
 
@@ -98,11 +129,21 @@ export async function proxy(req) {
   );
 
   // Validate/refresh session only when a cookie is present.
-  const { data: { user }, error } = await supabase.auth.getUser();
+  let user;
+  let error;
+  try {
+    ({ data: { user }, error } = await supabase.auth.getUser());
+  } catch (authError) {
+    error = authError;
+  }
 
-  // If Auth is rate-limited, do not redirect-loop (that makes 429 worse).
+  // If Auth is unreachable or rate-limited, do not redirect-loop.
   if (isAuthRateLimited(error)) {
     console.warn('[proxy] Supabase auth rate limited — passing request through');
+    return res;
+  }
+  if (isAuthUnreachable(error)) {
+    console.warn('[proxy] Supabase auth unreachable — passing request through');
     return res;
   }
 
