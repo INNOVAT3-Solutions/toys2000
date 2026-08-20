@@ -216,27 +216,15 @@ function LoginForm() {
 
           <div className="mt-6 text-center text-sm text-[#5f6980]">
             {mode === 'login' ? (
-              <div className="space-y-2">
-                <p>
-                  New to Toys2000?{' '}
-                  <Link
-                    href="/register"
-                    className="text-[#f15a24] font-semibold hover:underline"
-                  >
-                    Register here
-                  </Link>
-                </p>
-                <p>
-                  Already on MarketTime?{' '}
-                  <button
-                    type="button"
-                    onClick={() => setMode('signup')}
-                    className="text-[#00aeef] font-semibold hover:underline"
-                  >
-                    Create portal login
-                  </button>
-                </p>
-              </div>
+              <p>
+                New to Toys2000?{' '}
+                <Link
+                  href="/register"
+                  className="text-[#f15a24] font-semibold hover:underline"
+                >
+                  Register here
+                </Link>
+              </p>
             ) : (
               <>
                 Already have an account?{' '}
