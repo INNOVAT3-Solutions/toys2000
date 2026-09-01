@@ -224,7 +224,7 @@ export default function JuanHome() {
   };
 
   const signupBanner = promoBanners[0];
-  const signupLink = signupBanner?.link || 'https://toys2000.markettime.com/signup';
+  const signupLink = signupBanner?.link || '/register';
 
   const handleNewsletter = (e) => {
     e.preventDefault();

@@ -31,9 +31,9 @@ export default function PendingApprovalPage() {
         </p>
 
         <p className="text-sm text-[#5f6980] leading-relaxed mb-6">
-          Haven&apos;t completed MarketTime registration yet?{' '}
+          Haven&apos;t submitted a wholesale application yet?{' '}
           <Link href="/register" className="text-[#00aeef] font-semibold hover:underline">
-            Start here
+            Apply here
           </Link>
           . You can also{' '}
           <Link href="/profile" className="text-[#00aeef] font-semibold hover:underline">

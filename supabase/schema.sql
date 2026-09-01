@@ -255,3 +255,38 @@ drop policy if exists "No public access to sync_log" on sync_log;
 drop policy if exists "Admins can read sync log" on sync_log;
 create policy "Admins can read sync log"
   on sync_log for select using (public.is_admin());
+
+
+-- ─── pending_applications ─────────────────────────────────────
+-- Website /register submissions waiting for Jimmy to approve in /admin.
+-- Keeps the admin pending list fast (no full MarketTime customer scan).
+
+create table if not exists pending_applications (
+  id              uuid primary key default gen_random_uuid(),
+  retailer_id     text not null unique,
+  company_name    text not null,
+  email           text not null,
+  phone           text,
+  contact_name    text,
+  city            text,
+  state           text,
+  address1        text,
+  website         text,
+  tax_id          text,
+  status          text not null default 'pending'
+                    check (status in ('pending', 'approved', 'rejected')),
+  created_at      timestamptz not null default now(),
+  resolved_at     timestamptz
+);
+
+create index if not exists pending_applications_status_created_idx
+  on pending_applications (status, created_at desc);
+
+create index if not exists pending_applications_email_idx
+  on pending_applications (lower(email));
+
+alter table pending_applications enable row level security;
+
+drop policy if exists "No public access to pending_applications" on pending_applications;
+create policy "No public access to pending_applications"
+  on pending_applications for all using (false);

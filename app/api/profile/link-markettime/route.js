@@ -1,67 +1,8 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server';
-import { getMarketTimeConfig } from '@/lib/markettime-config';
 import { ensureDefaultSalesperson } from '@/lib/assign-default-salesperson';
+import { findCustomerByEmail, isApprovedCustomer } from '@/lib/find-markettime-customer';
 import { notifyApprovalIfNeeded } from '@/lib/notify-approval';
 import { NextResponse } from 'next/server';
-
-const BASE_URL = 'https://publicapi.markettime.com/mtpublic/api/v1';
-const PAGE_SIZE = 250;
-
-function isApprovedCustomer(customer) {
-  return (
-    customer.active !== false &&
-    customer.status !== 'INACTIVE' &&
-    customer.recordDeleted !== true &&
-    (customer.approvedByRepGroup === true
-      || customer.approvedByRepGroup === 1
-      || customer.approved === true)
-  );
-}
-
-async function fetchCustomersPage(offset) {
-  const { repGroupId, apiKey } = getMarketTimeConfig();
-  const res = await fetch(
-    `${BASE_URL}/${repGroupId}/customers/get?offset=${offset}&recordSize=${PAGE_SIZE}`,
-    {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'Content-Type': 'application/json',
-      },
-      // MarketTime expects an array of QueryFilter objects. Empty array returns
-      // the page of customers without filtering.
-      body: JSON.stringify([]),
-      cache: 'no-store',
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(`MarketTime customer lookup failed: ${res.status}`);
-  }
-
-  const data = await res.json();
-  if (!data.success) {
-    throw new Error(data.error?.message ?? 'MarketTime customer lookup failed');
-  }
-
-  return Array.isArray(data.response) ? data.response : data.response?.records ?? [];
-}
-
-async function findCustomerByEmail(email) {
-  const target = email.trim().toLowerCase();
-  let offset = 0;
-
-  while (true) {
-    const customers = await fetchCustomersPage(offset);
-    if (customers.length === 0) return null;
-
-    const match = customers.find((customer) => customer.email?.trim().toLowerCase() === target);
-    if (match) return match;
-
-    if (customers.length < PAGE_SIZE) return null;
-    offset += PAGE_SIZE;
-  }
-}
 
 export async function POST() {
   const supabase = await createServerSupabaseClient();

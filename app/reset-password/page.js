@@ -29,7 +29,7 @@ export default function ResetPasswordPage() {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       toast.success('Password updated. You can sign in with your new password.');
-      router.push('/catalog');
+      router.push('/');
       router.refresh();
     } catch (err) {
       toast.error(err.message || 'Could not update password. Try the reset link again.');

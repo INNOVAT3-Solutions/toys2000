@@ -1,6 +1,21 @@
 import { createServerClient } from '@supabase/ssr';
+import { findCustomerByEmail } from '@/lib/find-markettime-customer';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
+async function enforceMarketTimeRegistration(supabase, email) {
+  try {
+    const customer = await findCustomerByEmail(email);
+    if (!customer) {
+      await supabase.auth.signOut();
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.warn('[auth/callback] MarketTime lookup failed — allowing session:', err.message);
+    return true;
+  }
+}
 
 /**
  * Supabase auth callback handler.
@@ -12,7 +27,7 @@ export async function GET(request) {
   const code = searchParams.get('code');
   const tokenHash = searchParams.get('token_hash');
   const type = searchParams.get('type');
-  const next = searchParams.get('next') ?? '/catalog';
+  const next = searchParams.get('next') ?? '/';
 
   const cookieStore = await cookies();
 
@@ -37,6 +52,16 @@ export async function GET(request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      const skipMarketTimeCheck = next.includes('reset-password');
+      if (!skipMarketTimeCheck) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.email) {
+          const allowed = await enforceMarketTimeRegistration(supabase, user.email);
+          if (!allowed) {
+            return NextResponse.redirect(`${origin}/login?error=no_markettime_registration`);
+          }
+        }
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
 
@@ -51,6 +76,16 @@ export async function GET(request) {
     });
 
     if (!error) {
+      const skipMarketTimeCheck = type === 'recovery' || next.includes('reset-password');
+      if (!skipMarketTimeCheck) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.email) {
+          const allowed = await enforceMarketTimeRegistration(supabase, user.email);
+          if (!allowed) {
+            return NextResponse.redirect(`${origin}/login?error=no_markettime_registration`);
+          }
+        }
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
 

@@ -17,7 +17,7 @@ export default function LoginPage() {
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/catalog';
+  const redirect = searchParams.get('redirect') || '/';
   const errorParam = searchParams.get('error');
   const modeParam = searchParams.get('mode');
 
@@ -33,7 +33,7 @@ function LoginForm() {
   }, [modeParam]);
 
   const safeRedirect =
-    redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/catalog';
+    redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/';
 
   // Best-effort; never block navigation — MarketTime link can take several seconds.
   const linkMarketTimeProfile = () => {
@@ -57,6 +57,19 @@ function LoginForm() {
         linkMarketTimeProfile();
         goAfterAuth(safeRedirect);
         return;
+      }
+
+      const verifyRes = await fetch('/api/auth/verify-markettime-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok || !verifyData.eligible) {
+        throw new Error(
+          verifyData.message
+            || 'No MarketTime registration was found for this email. Complete Toys2000 signup first.'
+        );
       }
 
       const { data, error } = await supabase.auth.signUp({
@@ -137,16 +150,17 @@ function LoginForm() {
           <p className="text-sm text-[#5f6980] text-center mb-8">
             {mode === 'login'
               ? 'Sign in to your wholesale account'
-              : 'Step 2 — use the same email as your MarketTime registration'}
+              : 'Step 2 — use the same email as your wholesale application. Portal signup requires an approved MarketTime account.'}
           </p>
 
           {mode === 'signup' && (
             <div className="mb-6 px-4 py-3 bg-[#f0f9ff] border border-[#bae6fd] rounded-xl text-sm text-[#0c4a6e]">
-              <p className="font-semibold">Haven&apos;t registered on MarketTime yet?</p>
+              <p className="font-semibold">Haven&apos;t applied yet?</p>
               <p className="mt-1">
                 <Link href="/register" className="text-[#00aeef] font-semibold hover:underline">
-                  Start with step 1 — Register with Toys2000
+                  Submit a wholesale application first
                 </Link>
+                {' '}— Jimmy must approve you before portal signup works.
               </p>
             </div>
           )}
@@ -154,6 +168,16 @@ function LoginForm() {
           {errorParam === 'auth_callback_failed' && (
             <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               Email confirmation failed. Please try logging in again.
+            </div>
+          )}
+
+          {errorParam === 'no_markettime_registration' && (
+            <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              No MarketTime registration was found for this email.{' '}
+              <Link href="/register" className="font-semibold underline">
+                Complete Toys2000 signup first
+              </Link>
+              , then create your portal login.
             </div>
           )}
 

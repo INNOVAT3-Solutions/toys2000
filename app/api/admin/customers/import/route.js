@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin-auth';
+import { clearMarketTimeCustomerEmailCache } from '@/lib/find-markettime-customer';
 import { assignSalespersonToCustomerShipTo, approveCustomerForRepGroup, createCustomer } from '@/lib/markettime';
 import { getMarketTimeConfig } from '@/lib/markettime-config';
 import { importCustomerBatch, IMPORT_BATCH_SIZE } from '@/lib/customer-upload';
@@ -53,6 +54,7 @@ export async function POST(request) {
       salespersonId,
       approveCustomer: approveCustomerForRepGroup,
     });
+    clearMarketTimeCustomerEmailCache();
     return NextResponse.json({ results, salespersonId });
   } catch (err) {
     console.error('[/api/admin/customers/import]', err);

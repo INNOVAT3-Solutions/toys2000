@@ -1,16 +1,16 @@
 import { requireAdmin } from '@/lib/admin-auth';
 import { clearMarketTimeCustomerEmailCache } from '@/lib/find-markettime-customer';
-import { approveCustomerForRepGroup } from '@/lib/markettime';
+import { denyCustomerForRepGroup } from '@/lib/markettime';
 import { marketTimeErrorResponse } from '@/lib/markettime-errors';
-import { markPendingApplicationApproved } from '@/lib/pending-applications';
+import { markPendingApplicationRejected } from '@/lib/pending-applications';
 import { NextResponse } from 'next/server';
 
 const RATE_LIMIT_MS = 300;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * POST /api/admin/customers/approve
- * Approve existing MarketTime customers for the rep group (makes them visible to reps).
+ * POST /api/admin/customers/deny
+ * Deny pending MarketTime customers (inactive + unapproved) and mark local applications rejected.
  */
 export async function POST(request) {
   const auth = await requireAdmin();
@@ -40,11 +40,11 @@ export async function POST(request) {
       if (!retailerID) continue;
 
       try {
-        await approveCustomerForRepGroup(retailerID);
+        await denyCustomerForRepGroup(retailerID);
         try {
-          await markPendingApplicationApproved(retailerID);
+          await markPendingApplicationRejected(retailerID);
         } catch (localErr) {
-          console.warn('[/api/admin/customers/approve] local pending update skipped:', localErr.message);
+          console.warn('[/api/admin/customers/deny] local pending update skipped:', localErr.message);
         }
         results.push({ retailerID, ok: true });
       } catch (err) {
@@ -58,11 +58,11 @@ export async function POST(request) {
 
     return NextResponse.json({
       results,
-      approved: results.filter((r) => r.ok).length,
+      denied: results.filter((r) => r.ok).length,
       failed: results.filter((r) => !r.ok).length,
     });
   } catch (err) {
-    console.error('[/api/admin/customers/approve]', err);
+    console.error('[/api/admin/customers/deny]', err);
     if (err.message?.includes('401')) return marketTimeErrorResponse(err);
     return NextResponse.json({ error: err.message }, { status: 502 });
   }

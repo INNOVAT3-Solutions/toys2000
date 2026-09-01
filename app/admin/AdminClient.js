@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import CustomerUploadPanel from '@/components/CustomerUploadPanel';
+import PendingApplicationsPanel from '@/components/PendingApplicationsPanel';
 
 export default function AdminClient({ profiles: initialProfiles, syncLog, defaultSalespersonId = '' }) {
   const [profiles, setProfiles] = useState(initialProfiles);
@@ -184,6 +185,8 @@ export default function AdminClient({ profiles: initialProfiles, syncLog, defaul
             </div>
           )}
         </div>
+
+        <PendingApplicationsPanel />
 
         <CustomerUploadPanel defaultSalespersonId={defaultSalespersonId} />
 
